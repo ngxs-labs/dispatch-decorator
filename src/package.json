@@ -1,0 +1,34 @@
+{
+    "$schema": "../node_modules/ng-packagr/package.schema.json",
+    "name": "@ngxs-labs/dispatcher",
+    "version": "1.0.0",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ngxs-labs/dispatcher.git"
+    },
+    "license": "MIT",
+    "homepage": "https://github.com/ngxs-labs/dispatcher#readme",
+    "bugs": {
+        "url": "https://github.com/ngxs-labs/dispatcher/issues"
+    },
+    "keywords": [
+        "ngxs",
+        "redux",
+        "store"
+    ],
+    "sideEffects": true,
+    "peerDependencies": {
+        "@angular/core": "^7.0.0",
+        "@ngxs/store": ">=3.3.0"
+    },
+    "ngPackage": {
+        "lib": {
+            "flatModuleFile": "ngxs-labs-dispatcher",
+            "entryFile": "index.ts",
+            "umdModuleIds": {
+                "@ngxs/store": "ngxs-store"
+            }
+        },
+        "dest": "../dist/dispatcher"
+    }
+}

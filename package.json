@@ -1,0 +1,96 @@
+{
+    "name": "dispatcher",
+    "version": "0.0.0",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ngxs-labs/dispatcher.git"
+    },
+    "license": "MIT",
+    "homepage": "https://github.com/ngxs-labs/dispatcher#readme",
+    "bugs": {
+        "url": "https://github.com/ngxs-labs/dispatcher/issues"
+    },
+    "keywords": [
+        "ngxs",
+        "redux",
+        "store"
+    ],
+    "contributors": [
+        {
+            "name": "Artur Androsovych",
+            "email": "arthurandrosovich@gmail.com"
+        },
+        {
+            "name": "Maxim Ivanov",
+            "email": "splincodewd@yandex.ru"
+        }
+    ],
+    "scripts": {
+        "ng": "ng",
+        "start": "ng serve",
+        "build": "ng build",
+        "e2e": "ng e2e",
+        "// - UTILS": "Utility scripts",
+        "dispatcher:sonar": "ts-node ./tools/sonar",
+        "dispatcher:lint": "ng lint dispatcher",
+        "dispatcher:test": "ng test --watch=false --progress=false --project=dispatcher",
+        "dispatcher:build": "ts-node ./tools/build && ts-node ./tools/copy-readme",
+        "dispatcher:rollup": "rollup -c rollup.config.js",
+        "// - CI": "CI pipelines",
+        "ci:pipelines": "npm-run-all dispatcher:*",
+        "// - npm": "npm scripts",
+        "bump": "ts-node ./tools/bump"
+    },
+    "private": true,
+    "dependencies": {
+        "@angular/animations": "7.0.0",
+        "@angular/common": "7.0.0",
+        "@angular/compiler": "7.0.0",
+        "@angular/core": "7.0.0",
+        "@angular/forms": "7.0.0",
+        "@angular/http": "7.0.0",
+        "@angular/platform-browser": "7.0.0",
+        "@angular/platform-browser-dynamic": "7.0.0",
+        "@angular/router": "7.0.0",
+        "@ngxs/store": "3.3.0",
+        "core-js": "2.5.4",
+        "rxjs": "6.0.0",
+        "zone.js": "0.8.26"
+    },
+    "devDependencies": {
+        "@angular-devkit/build-angular": "0.10.2",
+        "@angular-devkit/build-ng-packagr": "0.10.2",
+        "@angular/cli": "7.0.2",
+        "@angular/compiler-cli": "7.0.0",
+        "@angular/language-service": "7.0.0",
+        "@types/jasmine": "2.8.6",
+        "@types/jasminewd2": "2.0.3",
+        "@types/node": "8.9.4",
+        "@types/semver": "5.5.0",
+        "@types/yargs": "12.0.1",
+        "codelyzer": "4.5.0",
+        "coveralls": "3.0.2",
+        "generate-changelog": "1.7.1",
+        "jasmine-core": "2.99.1",
+        "jasmine-spec-reporter": "4.2.1",
+        "karma": "1.7.1",
+        "karma-chrome-launcher": "2.2.0",
+        "karma-coverage-istanbul-reporter": "2.0.0",
+        "karma-jasmine": "1.1.1",
+        "karma-jasmine-html-reporter": "0.2.2",
+        "ng-packagr": "4.4.0",
+        "npm-run-all": "4.1.3",
+        "protractor": "5.3.0",
+        "rollup": "0.66.4",
+        "rollup-plugin-node-resolve": "3.4.0",
+        "rollup-plugin-sourcemaps": "0.4.2",
+        "semver": "5.6.0",
+        "sonarjs": "1.0.0",
+        "ts-node": "5.0.1",
+        "tsickle": "0.33.0",
+        "tslib": "1.9.0",
+        "tslint": "5.9.1",
+        "typescript": "3.1.3",
+        "yargs": "12.0.2"
+    }
+}
