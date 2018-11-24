@@ -123,12 +123,10 @@ describe(NgxsDispatchPluginModule.name, () => {
         @Component({ template: '' })
         class MockComponent {
             @Dispatch()
-            public async addTodo() {
-                return new AddTodo({
-                    text: 'Buy some coffee',
-                    completed: false
-                });
-            }
+            public addTodo = async () => new AddTodo({
+                text: 'Buy some coffee',
+                completed: false
+            })
         }
 
         TestBed.configureTestingModule({
