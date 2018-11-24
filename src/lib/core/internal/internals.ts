@@ -12,7 +12,7 @@ export interface DispatchedEvent<T = unknown> {
 /**
  * Methods decorated with `@Dispatch()` decorator can return plain object or `Promise` or `Observable`
  */
-export type DispatchedEventStream = Observable<DispatchedEvent> | Promise<DispatchedEvent> | DispatchedEvent;
+export type WrappedDispatchedEvent = Observable<DispatchedEvent> | Promise<DispatchedEvent> | DispatchedEvent;
 
 /**
  * Event can be a plain object or an instance of some class

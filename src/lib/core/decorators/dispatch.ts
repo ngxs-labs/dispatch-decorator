@@ -1,11 +1,18 @@
 import { Store } from '@ngxs/store';
 
-import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 
 import { InjectorAccessor } from '../services/injector-accessor.service';
-import { DispatchedEvent, isValidEvent, descriptorExists, eventIsPlainObject, isObservable, isPromise } from '../internal/internals';
 import { DispatchAction } from '../actions/actions';
+import {
+    DispatchedEvent,
+    WrappedDispatchedEvent,
+    isValidEvent,
+    descriptorExists,
+    eventIsPlainObject,
+    isObservable,
+    isPromise
+} from '../internal/internals';
 
 /**
  * @internal
@@ -39,7 +46,7 @@ export function Dispatch(): PropertyDecorator {
         let originalValue: Function = null!;
 
         const wrapped = function(...args: any[]) {
-            const event: Observable<DispatchedEvent> | Promise<DispatchedEvent> = originalValue.apply(target, args);
+            const event: WrappedDispatchedEvent = originalValue.apply(target, args);
 
             if (isObservable(event)) {
                 event.pipe(first()).subscribe(dispatchEvent(target, key));
