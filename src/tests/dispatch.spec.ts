@@ -39,7 +39,7 @@ describe(NgxsDispatchPluginModule.name, () => {
             public addTodo = () => new AddTodo({
                 text: 'Buy some coffee',
                 completed: false
-            });
+            })
         }
 
         TestBed.configureTestingModule({
@@ -65,7 +65,7 @@ describe(NgxsDispatchPluginModule.name, () => {
         @Component({ template: '' })
         class MockComponent {
             @Dispatch()
-            public addTodo = () => ({});
+            public addTodo = () => ({})
         }
 
         TestBed.configureTestingModule({
@@ -97,7 +97,7 @@ describe(NgxsDispatchPluginModule.name, () => {
                     text: 'Buy some coffee',
                     completed: false
                 }
-            });
+            })
         }
 
         TestBed.configureTestingModule({
@@ -162,7 +162,7 @@ describe(NgxsDispatchPluginModule.name, () => {
             public addTodo = () => of(new AddTodo({
                 text: 'Buy some coffee',
                 completed: false
-            })).pipe(delay(1000));
+            })).pipe(delay(1000))
         }
 
         TestBed.configureTestingModule({
