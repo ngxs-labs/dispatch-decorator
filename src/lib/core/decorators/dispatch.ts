@@ -1,54 +1,53 @@
 import { Store } from '@ngxs/store';
 
+import { Observable } from 'rxjs';
+import { first } from 'rxjs/operators';
+
 import { InjectorAccessor } from '../services/injector-accessor.service';
-
-/**
- * Event can be a plain object or an instance of some class
- *
- * @internal
- * @param event - Dispatched event
- * @returns - True if plain object or instance constructor has `type` property
- */
-function hasTypeProperty<T extends object>(event: T): boolean {
-    return event.hasOwnProperty('type') || event.constructor.hasOwnProperty('type');
-}
+import { DispatchedEvent, isValidEvent, descriptorExists, eventIsPlainObject, isObservable, isPromise } from '../internal/internals';
+import { DispatchAction } from '../actions/actions';
 
 /**
  * @internal
- * @param event - Dispatched event
- * @returns - True if event is an object and has `type` property
+ * @param target - Parent class that contains decorated property
+ * @param key - Decorated key
  */
-function isValidEvent<T extends object>(event: T): boolean {
-    return !!event && typeof event === 'object' && hasTypeProperty<T>(event);
+function dispatchEvent(target: any, key: string | symbol) {
+    const store = InjectorAccessor.getInjector().get<Store>(Store);
+
+    return (event: DispatchedEvent) => {
+        const isInvalidEvent = !isValidEvent(event);
+
+        if (isInvalidEvent) {
+            throw new Error(`Your method \`${target.name}.${key.toString()}\` seems to return an invalid object`);
+        }
+
+        if (eventIsPlainObject(event)) {
+            DispatchAction.type = event.type;
+            store.dispatch(new DispatchAction(event.payload));
+        } else {
+            store.dispatch(event);
+        }
+    };
 }
 
 /**
- * Descriptor exists only in case of method decorating
- *
- * @internal
- * @param descriptor - Property descriptor
- * @returns - True if descriptor exists
- */
-function descriptorExists(descriptor: TypedPropertyDescriptor<Function> | undefined): boolean {
-    return !!descriptor && descriptor.hasOwnProperty('value');
-}
-
-/**
- * @returns - A factory for method decorating
+ * @returns - A factory for decorating methods/properties
  */
 export function Dispatch(): PropertyDecorator {
     return (target: any, key: string | symbol, descriptor?: TypedPropertyDescriptor<Function>) => {
         let originalValue: Function = null!;
 
         const wrapped = function(...args: any[]) {
-            const event = originalValue.apply(target, args);
-            const isInvalidEvent = !isValidEvent(event);
+            const event: Observable<DispatchedEvent> | Promise<DispatchedEvent> = originalValue.apply(target, args);
 
-            if (isInvalidEvent) {
-                throw new Error(`Your method \`${target.name}.${key.toString()}\` seems to return an invalid object`);
+            if (isObservable(event)) {
+                event.pipe(first()).subscribe(dispatchEvent(target, key));
+            } else if (isPromise(event)) {
+                event.then(dispatchEvent(target, key));
+            } else {
+                dispatchEvent(target, key)(event);
             }
-
-            return InjectorAccessor.getInjector().get<Store>(Store).dispatch(event) && event;
         };
 
         const methodDecorated = descriptorExists(descriptor);
