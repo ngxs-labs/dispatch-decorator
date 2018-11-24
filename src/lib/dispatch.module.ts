@@ -4,10 +4,7 @@ import { InjectorAccessor } from './core/services/injector-accessor.service';
 
 @NgModule()
 export class NgxsDispatchPluginModule {
-    constructor(
-        @Self()
-        public injectorAccessor: InjectorAccessor
-    ) {}
+    constructor(@Self() private injectorAccessor: InjectorAccessor) {}
 
     /**
      * @returns - A wrapper around `NgModule`

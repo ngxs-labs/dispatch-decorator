@@ -5,6 +5,7 @@ import { InjectorAccessor } from '../services/injector-accessor.service';
 /**
  * Event can be a plain object or an instance of some class
  *
+ * @internal
  * @param event - Dispatched event
  * @returns - True if plain object or instance constructor has `type` property
  */
@@ -13,6 +14,7 @@ function hasTypeProperty<T extends object>(event: T): boolean {
 }
 
 /**
+ * @internal
  * @param event - Dispatched event
  * @returns - True if event is an object and has `type` property
  */
@@ -23,6 +25,7 @@ function isValidEvent<T extends object>(event: T): boolean {
 /**
  * Descriptor exists only in case of method decorating
  *
+ * @internal
  * @param descriptor - Property descriptor
  * @returns - True if descriptor exists
  */

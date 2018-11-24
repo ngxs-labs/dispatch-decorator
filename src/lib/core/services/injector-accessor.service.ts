@@ -20,7 +20,7 @@ export class InjectorAccessor {
     }
 
     /**
-     * @returns - Throws if `NgxsDispatcherPluginModule` is not imported or injector instance
+     * @returns - Throws if `NgxsDispatchPluginModule` is not imported or injector instance
      */
     public static getInjector(): never | Injector {
         if (!this.injector) {

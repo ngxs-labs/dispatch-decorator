@@ -3,11 +3,11 @@
     "version": 1,
     "newProjectRoot": "projects",
     "projects": {
-        "dispatcher": {
+        "dispatch": {
             "root": "./",
             "sourceRoot": "./",
             "projectType": "library",
-            "prefix": "dispatcher",
+            "prefix": "dispatch",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-ng-packagr:build",

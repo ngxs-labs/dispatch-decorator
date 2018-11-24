@@ -10,7 +10,7 @@ describe(NgxsDispatchPluginModule.name, () => {
         completed: boolean;
     }
 
-    it('should be possible to dispatch events using @Dispatcher() decorator', () => {
+    it('should be possible to dispatch events using @Dispatch() decorator', () => {
         class AddTodo {
             public static readonly type = '[Todos] Add todo';
 
