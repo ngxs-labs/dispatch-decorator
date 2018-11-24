@@ -10,10 +10,10 @@ const globals = {
     '@ngxs/store': 'ngxs.store'
 };
 
-const input = join(__dirname, 'dist/emitter/fesm5/ngxs-labs-emitter.js');
+const input = join(__dirname, 'dist/dispatch/fesm5/ngxs-labs-dispatch.js');
 const output = {
-    file: join(__dirname, 'dist/emitter/bundles/ngxs-labs-emitter.umd.js'),
-    name: 'ngxs-labs.emitter',
+    file: join(__dirname, 'dist/dispatch/bundles/ngxs-labs-dispatch.umd.js'),
+    name: 'ngxs-labs.dispatch',
     globals,
     format: 'umd',
     exports: 'named'
