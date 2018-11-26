@@ -1,3 +1,4 @@
+import { NgZone } from '@angular/core';
 import { Store } from '@ngxs/store';
 
 import { isObservable } from 'rxjs';
@@ -14,7 +15,6 @@ import {
     isPromise,
     DispatchEventFactory
 } from '../internal/internals';
-import { NgZone } from '@angular/core';
 
 /**
  * @internal
