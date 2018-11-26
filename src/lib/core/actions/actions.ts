@@ -5,7 +5,7 @@ export class DispatchAction<T = unknown> {
     /**
      * Action type
      */
-    public static type: string = null!;
+    public static type: string | null = null;
 
     /**
      * Creates DispatchAction instance
