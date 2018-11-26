@@ -55,17 +55,9 @@ export function eventIsPlainObject<T extends Object>(event: T): boolean {
 }
 
 /**
- * @param target - Target to check if it's an `Observable`
- * @returns - True if target is a stream
- */
-export function isObservable(target: any): target is Observable<unknown> {
-    return !!target && typeof target.subscribe === 'function';
-}
-
-/**
  * @param target - Target to check if it's a `Promise`
  * @returns - True if target is a `Promise`
  */
 export function isPromise(target: any): target is Promise<unknown> {
-    return !!target && typeof target.then === 'function';
+    return target instanceof Promise;
 }
