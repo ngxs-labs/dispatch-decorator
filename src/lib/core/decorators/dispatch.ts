@@ -92,7 +92,7 @@ export function Dispatch(): PropertyDecorator {
                 dispatchEventIfZoneIsNotNoop(event, dispatch, zone);
             } else {
                 dispatchEventIfZoneIsNooped(event, dispatch);
-            }            
+            }
         };
 
         const methodDecorated = descriptorExists(descriptor);
