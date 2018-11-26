@@ -45,18 +45,16 @@ function dispatchEvent(target: any, key: string | symbol): DispatchEventFactory 
  * @param dispatch - Function that dispatches event
  * @param zone - `NgZone` instance
  */
-function dispatchEventIfZoneIsNotNoop(event: WrappedDispatchedEvent, dispatch: DispatchEventFactory, zone: NgZone): void {
+function dispatchEventIfZoneIsNotNooped(event: WrappedDispatchedEvent, dispatch: DispatchEventFactory, zone: NgZone): void {
+    const dispatchInsideZone = (event: DispatchedEvent) => zone.run(() => dispatch(event));
+
     zone.runOutsideAngular(() => {
         if (isObservable(event)) {
-            event.pipe(first()).subscribe((event) => {
-                zone.run(() => dispatch(event));
-            });
+            event.pipe(first()).subscribe((event) => dispatchInsideZone(event));
         } else if (isPromise(event)) {
-            event.then((event) => {
-                zone.run(() => dispatch(event));
-            });
+            event.then((event) => dispatchInsideZone(event));
         } else {
-            zone.run(() => dispatch(event));
+            dispatchInsideZone(event);
         }
     });
 }
@@ -89,7 +87,7 @@ export function Dispatch(): PropertyDecorator {
 
             // If `zone` is not an instance of `NoopNgZone` class
             if (zone instanceof NgZone) {
-                dispatchEventIfZoneIsNotNoop(event, dispatch, zone);
+                dispatchEventIfZoneIsNotNooped(event, dispatch, zone);
             } else {
                 dispatchEventIfZoneIsNooped(event, dispatch);
             }
