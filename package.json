@@ -1,14 +1,14 @@
 {
-    "name": "dispatcher",
+    "name": "dispatch",
     "version": "0.0.0",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/ngxs-labs/dispatcher.git"
+        "url": "git+https://github.com/ngxs-labs/dispatch.git"
     },
     "license": "MIT",
-    "homepage": "https://github.com/ngxs-labs/dispatcher#readme",
+    "homepage": "https://github.com/ngxs-labs/dispatch#readme",
     "bugs": {
-        "url": "https://github.com/ngxs-labs/dispatcher/issues"
+        "url": "https://github.com/ngxs-labs/dispatch/issues"
     },
     "keywords": [
         "ngxs",
@@ -31,13 +31,13 @@
         "build": "ng build",
         "e2e": "ng e2e",
         "// - UTILS": "Utility scripts",
-        "dispatcher:sonar": "ts-node ./tools/sonar",
-        "dispatcher:lint": "ng lint dispatcher",
-        "dispatcher:test": "ng test --watch=false --progress=false --project=dispatcher",
-        "dispatcher:build": "ts-node ./tools/build && ts-node ./tools/copy-readme",
-        "dispatcher:rollup": "rollup -c rollup.config.js",
+        "dispatch:sonar": "ts-node ./tools/sonar",
+        "dispatch:lint": "ng lint dispatch",
+        "dispatch:test": "ng test --watch=false --progress=false --project=dispatch",
+        "dispatch:build": "ts-node ./tools/build && ts-node ./tools/copy-readme",
+        "dispatch:rollup": "rollup -c rollup.config.js",
         "// - CI": "CI pipelines",
-        "ci:pipelines": "npm-run-all dispatcher:*",
+        "ci:pipelines": "npm-run-all dispatch:*",
         "// - npm": "npm scripts",
         "bump": "ts-node ./tools/bump"
     },

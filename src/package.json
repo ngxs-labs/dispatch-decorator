@@ -1,15 +1,15 @@
 {
     "$schema": "../node_modules/ng-packagr/package.schema.json",
-    "name": "@ngxs-labs/dispatcher",
+    "name": "@ngxs-labs/dispatch-decorator",
     "version": "1.0.0",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/ngxs-labs/dispatcher.git"
+        "url": "git+https://github.com/ngxs-labs/dispatch-decorator.git"
     },
     "license": "MIT",
-    "homepage": "https://github.com/ngxs-labs/dispatcher#readme",
+    "homepage": "https://github.com/ngxs-labs/dispatch-decorator#readme",
     "bugs": {
-        "url": "https://github.com/ngxs-labs/dispatcher/issues"
+        "url": "https://github.com/ngxs-labs/dispatch-decorator/issues"
     },
     "keywords": [
         "ngxs",
@@ -23,12 +23,12 @@
     },
     "ngPackage": {
         "lib": {
-            "flatModuleFile": "ngxs-labs-dispatcher",
+            "flatModuleFile": "ngxs-labs-dispatch",
             "entryFile": "index.ts",
             "umdModuleIds": {
                 "@ngxs/store": "ngxs-store"
             }
         },
-        "dest": "../dist/dispatcher"
+        "dest": "../dist/dispatch"
     }
 }
