@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { NgxsModule, State, Action, Store, StateContext, Actions, ofActionSuccessful } from '@ngxs/store';
 
 import { of } from 'rxjs';
-import { exhaustMap, delay } from 'rxjs/operators';
+import { exhaustMap, delay, first } from 'rxjs/operators';
 
 import { NgxsDispatchPluginModule, Dispatch } from '../public_api';
 
@@ -153,7 +153,7 @@ describe(NgxsDispatchPluginModule.name, () => {
         fixture.componentInstance.addTodo();
     });
 
-    it('should be possible to dispatch events if decorated method returns an `Observable`', (done: DoneFn) => {
+    it('should be possible to dispatch events if decorated method returns an `Observable`', (done: jest.DoneCallback) => {
         @Component({ template: '' })
         class MockComponent {
             @Dispatch()
@@ -182,6 +182,50 @@ describe(NgxsDispatchPluginModule.name, () => {
             exhaustMap(() => store.selectOnce<Todo[]>(({ todos }) => todos))
         ).subscribe(({ length }) => {
             expect(length).toBe(1);
+            done();
+        });
+
+        fixture.componentInstance.addTodo();
+    });
+
+    it('events should be handled outside zone but dispatched inside', (done: jest.DoneCallback) => {
+        function asyncTimeout(timeout: number): Promise<void> {
+            return new Promise((resolve) => {
+                setTimeout(resolve, timeout);
+            });
+        }
+
+        @Component({ template: '' })
+        class MockComponent {
+            @Dispatch()
+            public addTodo = async () => {
+                await asyncTimeout(200);
+                expect(NgZone.isInAngularZone()).toBeFalsy();
+                await asyncTimeout(200);
+                return new AddTodo({
+                    text: 'Buy some coffee',
+                    completed: false
+                });
+            }
+        }
+
+        TestBed.configureTestingModule({
+            imports: [
+                NgxsModule.forRoot([TodosState]),
+                NgxsDispatchPluginModule.forRoot()
+            ],
+            declarations: [
+                MockComponent
+            ]
+        });
+
+        const actions$: Actions = TestBed.get(Actions);
+        const fixture = TestBed.createComponent(MockComponent);
+
+        actions$.pipe(
+            ofActionSuccessful(AddTodo),
+            first()
+        ).subscribe(() => {
             done();
         });
 

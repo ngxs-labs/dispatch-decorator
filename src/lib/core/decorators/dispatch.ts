@@ -1,3 +1,4 @@
+import { NgZone } from '@angular/core';
 import { Store } from '@ngxs/store';
 
 import { isObservable } from 'rxjs';
@@ -11,7 +12,8 @@ import {
     isValidEvent,
     descriptorExists,
     eventIsPlainObject,
-    isPromise
+    isPromise,
+    DispatchEventFactory
 } from '../internal/internals';
 
 /**
@@ -19,10 +21,10 @@ import {
  * @param target - Parent class that contains decorated property
  * @param key - Decorated key
  */
-function dispatchEvent(target: any, key: string | symbol) {
+function dispatchEvent(target: any, key: string | symbol): DispatchEventFactory {
     const store = InjectorAccessor.getInjector().get<Store>(Store);
 
-    return (event: DispatchedEvent) => {
+    return (event: DispatchedEvent): void => {
         const isInvalidEvent = !isValidEvent(event);
 
         if (isInvalidEvent) {
@@ -39,6 +41,25 @@ function dispatchEvent(target: any, key: string | symbol) {
 }
 
 /**
+ * @param event - Wrapped dispatched event
+ * @param dispatch - Function that dispatches event
+ * @param zone - `NgZone` instance
+ */
+function dispatchEventInZone(event: WrappedDispatchedEvent, dispatch: DispatchEventFactory, zone: NgZone): void {
+    const dispatchInsideZone = (event: DispatchedEvent) => zone.run(() => dispatch(event));
+
+    zone.runOutsideAngular(() => {
+        if (isObservable(event)) {
+            event.pipe(first()).subscribe((event) => dispatchInsideZone(event));
+        } else if (isPromise(event)) {
+            event.then((event) => dispatchInsideZone(event));
+        } else {
+            dispatchInsideZone(event);
+        }
+    });
+}
+
+/**
  * @returns - A factory for decorating methods/properties
  */
 export function Dispatch(): PropertyDecorator {
@@ -48,14 +69,8 @@ export function Dispatch(): PropertyDecorator {
         const wrapped = function(...args: any[]) {
             const event: WrappedDispatchedEvent = originalValue.apply(target, args);
             const dispatch = dispatchEvent(target, key);
-
-            if (isObservable(event)) {
-                event.pipe(first()).subscribe(dispatch);
-            } else if (isPromise(event)) {
-                event.then(dispatch);
-            } else {
-                dispatch(event);
-            }
+            const zone = InjectorAccessor.getInjector().get<NgZone>(NgZone);
+            dispatchEventInZone(event, dispatch, zone);
         };
 
         const methodDecorated = descriptorExists(descriptor);

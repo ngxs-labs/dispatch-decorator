@@ -15,6 +15,11 @@ export interface DispatchedEvent<T = unknown> {
 export type WrappedDispatchedEvent = Observable<DispatchedEvent> | Promise<DispatchedEvent> | DispatchedEvent;
 
 /**
+ * Factory function alias
+ */
+export type DispatchEventFactory = (event: DispatchedEvent) => void;
+
+/**
  * Event can be a plain object or an instance of some class
  *
  * @internal
