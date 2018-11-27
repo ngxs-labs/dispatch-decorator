@@ -7,10 +7,10 @@
 > Reusable logic for avoiding `Store` injection
 
 [![Build Status](https://travis-ci.org/ngxs-labs/dispatch-decorator.svg?branch=master)](https://travis-ci.org/ngxs-labs/dispatch-decorator)
-[![Build status](https://ci.appveyor.com/api/projects/status/o6g3tjxmprr2qef9/branch/master?svg=true)](https://ci.appveyor.com/project/arturovt/dispatch-decorator/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/tgbu55o6lephax5j?svg=true)](https://ci.appveyor.com/project/arturovt/dispatch-decorator)
 [![NPM](https://badge.fury.io/js/%40ngxs-labs%2Fdispatch-decorator.svg)](https://www.npmjs.com/package/@ngxs-labs/dispatch-decorator)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/ngxs-labs/tools/blob/master/license)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/079272acc4104332b904dc6818929d06)](https://www.codacy.com/app/arturovt/dispatch-decorator?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ngxs-contrib/dispatch-decorator&amp;utm_campaign=Badge_Grade)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/ngxs-labs/dispatch-decorator/blob/master/LICENSE)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/610c73ab99434bf9807c080e7feb8b85)](https://www.codacy.com/app/arturovt/dispatch-decorator?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ngxs-labs/dispatch-decorator&amp;utm_campaign=Badge_Grade)
 
 This package simplifies dispatching process, you shouldn't care about `Store` service injection as we provide more declarative way to dispatch events out of the box.
 
@@ -107,3 +107,29 @@ export class AppComponent {
     public decrement = () => new Decrement()
 }
 ```
+
+Also, your dispatchers can be asyncrhonous, they can return `Promise` or `Observable`, asynchronous operations are handled outside Angular's zone, thus it doesn't affect performance:
+
+```typescript
+export class AppComponent {
+    // `ApiService` is defined somewhere
+    constructor(private api: ApiService) {}
+
+    @Dispatch()
+    public async setAppSchema(): Promise<SetAppSchema> {
+        const { version, shouldUseGraphQL } = await this.api.getInformation();
+        const { schema } = await this.api.getSchemaForVersion(version);
+        return new SetAppSchema(schema);
+    }
+
+    // OR
+
+    @Dispatch()
+    public setAppInformation = () => this.api.getInformation().pipe(
+        switchMap(({ version }) => this.api.getSchemaForVersion(version)),
+        map(({ schema }) => new SetAppSchema(schema))
+    );
+}
+```
+
+Notice that it's not necessary if you use an arrow function or a normal class method.
