@@ -45,7 +45,7 @@ function dispatchEvent(target: any, key: string | symbol): DispatchEventFactory 
  * @param dispatch - Function that dispatches event
  * @param zone - `NgZone` instance
  */
-function dispatchEventIfZoneIsNotNooped(event: WrappedDispatchedEvent, dispatch: DispatchEventFactory, zone: NgZone): void {
+function dispatchEventInZone(event: WrappedDispatchedEvent, dispatch: DispatchEventFactory, zone: NgZone): void {
     const dispatchInsideZone = (event: DispatchedEvent) => zone.run(() => dispatch(event));
 
     zone.runOutsideAngular(() => {
@@ -60,20 +60,6 @@ function dispatchEventIfZoneIsNotNooped(event: WrappedDispatchedEvent, dispatch:
 }
 
 /**
- * @param event - Wrapped dispatched event
- * @param dispatch - Function that dispatches event
- */
-function dispatchEventIfZoneIsNooped(event: WrappedDispatchedEvent, dispatch: DispatchEventFactory): void {
-    if (isObservable(event)) {
-        event.pipe(first()).subscribe(dispatch);
-    } else if (isPromise(event)) {
-        event.then(dispatch);
-    } else {
-        dispatch(event);
-    }
-}
-
-/**
  * @returns - A factory for decorating methods/properties
  */
 export function Dispatch(): PropertyDecorator {
@@ -84,13 +70,7 @@ export function Dispatch(): PropertyDecorator {
             const event: WrappedDispatchedEvent = originalValue.apply(target, args);
             const dispatch = dispatchEvent(target, key);
             const zone = InjectorAccessor.getInjector().get<NgZone>(NgZone);
-
-            // If `zone` is not an instance of `NoopNgZone` class
-            if (zone instanceof NgZone) {
-                dispatchEventIfZoneIsNotNooped(event, dispatch, zone);
-            } else {
-                dispatchEventIfZoneIsNooped(event, dispatch);
-            }
+            dispatchEventInZone(event, dispatch, zone);
         };
 
         const methodDecorated = descriptorExists(descriptor);
