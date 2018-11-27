@@ -46,7 +46,7 @@ export function isValidEvent<T extends Object>(event: T): boolean {
  * @param descriptor - Property descriptor
  * @returns - True if descriptor exists
  */
-export function descriptorExists(descriptor: TypedPropertyDescriptor<Function> | undefined): boolean {
+export function isDescriptor(descriptor?: any): descriptor is TypedPropertyDescriptor<Function> {
     return !!descriptor && descriptor.hasOwnProperty('value');
 }
 

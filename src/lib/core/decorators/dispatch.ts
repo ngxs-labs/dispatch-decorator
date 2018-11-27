@@ -9,11 +9,11 @@ import { DispatchAction } from '../actions/actions';
 import {
     DispatchedEvent,
     WrappedDispatchedEvent,
+    DispatchEventFactory,
     isValidEvent,
-    descriptorExists,
     eventIsPlainObject,
     isPromise,
-    DispatchEventFactory
+    isDescriptor
 } from '../internal/internals';
 
 /**
@@ -66,18 +66,16 @@ export function Dispatch(): PropertyDecorator {
     return (target: any, key: string | symbol, descriptor?: TypedPropertyDescriptor<Function>) => {
         let originalValue: Function = null!;
 
-        const wrapped = function(...args: any[]) {
+        function wrapped(...args: any[]) {
             const event: WrappedDispatchedEvent = originalValue.apply(target, args);
             const dispatch = dispatchEvent(target, key);
             const zone = InjectorAccessor.getInjector().get<NgZone>(NgZone);
             dispatchEventInZone(event, dispatch, zone);
-        };
+        }
 
-        const methodDecorated = descriptorExists(descriptor);
-
-        if (methodDecorated) {
-            originalValue = descriptor!.value!;
-            descriptor!.value = wrapped;
+        if (isDescriptor(descriptor)) {
+            originalValue = descriptor.value!;
+            descriptor.value = wrapped;
         } else {
             Object.defineProperty(target, key, {
                 set: (lambda: Function) => {
