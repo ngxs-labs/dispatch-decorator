@@ -10,7 +10,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/tgbu55o6lephax5j?svg=true)](https://ci.appveyor.com/project/arturovt/dispatch-decorator)
 [![NPM](https://badge.fury.io/js/%40ngxs-labs%2Fdispatch-decorator.svg)](https://www.npmjs.com/package/@ngxs-labs/dispatch-decorator)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/ngxs-labs/dispatch-decorator/blob/master/LICENSE)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/610c73ab99434bf9807c080e7feb8b85)](https://www.codacy.com/app/arturovt/dispatch-decorator?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ngxs-labs/dispatch-decorator&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/610c73ab99434bf9807c080e7feb8b85)](https://www.codacy.com/app/arturovt/dispatch-decorator?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ngxs-labs/dispatch-decorator&amp;utm_campaign=Badge_Grade) [![Greenkeeper badge](https://badges.greenkeeper.io/ngxs-labs/dispatch-decorator.svg)](https://greenkeeper.io/)
 
 This package simplifies dispatching process, you shouldn't care about `Store` service injection as we provide more declarative way to dispatch events out of the box.
 
