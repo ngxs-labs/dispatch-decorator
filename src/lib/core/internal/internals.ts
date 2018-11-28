@@ -27,7 +27,7 @@ export type WrappedDispatchedEvent = StreamLike<DispatchedEventOrDispatchedEvent
 /**
  * Factory function alias
  */
-export type DispatchEventFactory = (event: DispatchedEvent) => void;
+export type DispatchEventFactory = (event: DispatchedEventOrDispatchedEvents) => void;
 
 /**
  * Event can be a plain object or an instance of some class

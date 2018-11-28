@@ -12,32 +12,60 @@ import {
     DispatchEventFactory,
     StreamLike,
     DispatchedEventOrDispatchedEvents,
-    isValidEvent,
     eventIsPlainObject,
     isPromise,
     isDescriptor
 } from '../internal/internals';
 
 /**
+ * Dispatches multiple events
+ *
+ * @param events - Array that contain plain objects or action instances
+ * @param store - `Store` instance
+ */
+function dispatchMany(events: DispatchedEvent[], store: Store): void {
+    events = events.reduce((accumulator: any[], event) => {
+        if (eventIsPlainObject(event)) {
+            DispatchAction.type = event.type;
+            accumulator.push(new DispatchAction(event.payload));
+        } else {
+            accumulator.push(event);
+        }
+
+        return accumulator;
+    }, []);
+
+    store.dispatch(events);
+}
+
+/**
+ * Dispatches single event
+ *
+ * @param event - Single dispatch event, can be object literal or action instance
+ * @param store - `Store` instance
+ */
+function dispatchSingle(event: DispatchedEvent, store: Store): void {
+    if (eventIsPlainObject(event)) {
+        DispatchAction.type = event.type;
+        store.dispatch(new DispatchAction(event.payload));
+    } else {
+        store.dispatch(event);
+    }
+}
+
+/**
  * @internal
  * @param target - Parent class that contains decorated property
  * @param key - Decorated key
  */
-function resolveDispatchEventFactory(target: any, key: string | symbol): DispatchEventFactory {
+function resolveDispatchEventFactory(): DispatchEventFactory {
     const store = InjectorAccessor.getInjector().get<Store>(Store);
 
-    return (event: DispatchedEvent): void => {
-        const isInvalidEvent = !isValidEvent(event);
-
-        if (isInvalidEvent) {
-            throw new Error(`Your method \`${target.name}.${key.toString()}\` seems to return an invalid object`);
-        }
-
-        if (eventIsPlainObject(event)) {
-            DispatchAction.type = event.type;
-            store.dispatch(new DispatchAction(event.payload));
+    return (event: DispatchedEventOrDispatchedEvents): void => {
+        if (Array.isArray(event)) {
+            dispatchMany(event, store);
         } else {
-            store.dispatch(event);
+            dispatchSingle(event, store);
         }
     };
 }
@@ -48,17 +76,7 @@ function resolveDispatchEventFactory(target: any, key: string | symbol): Dispatc
  * @param zone - `NgZone` instance
  */
 function dispatchEvent(event: WrappedDispatchedEvent, dispatch: DispatchEventFactory, zone: NgZone): void {
-    const dispatchInsideZone = (event: DispatchedEventOrDispatchedEvents) => {
-        if (Array.isArray(event)) {
-            zone.run(() => {
-                for (let i = 0, length = event.length; i < length; i++) {
-                    dispatch(event[i]);
-                }
-            });
-        } else {
-            zone.run(() => dispatch(event));
-        }
-    };
+    const dispatchInsideZone = (event: DispatchedEventOrDispatchedEvents) => zone.run(() => dispatch(event));
 
     zone.runOutsideAngular(() => {
         const isStreamOrPromise = isObservable<DispatchedEvent>(event) || isPromise(event);
@@ -82,7 +100,7 @@ export function Dispatch(): PropertyDecorator {
 
         function wrapped(...args: any[]) {
             const event: WrappedDispatchedEvent = originalValue.apply(target, args);
-            const dispatch = resolveDispatchEventFactory(target, key);
+            const dispatch = resolveDispatchEventFactory();
             const zone = InjectorAccessor.getInjector().get<NgZone>(NgZone);
             dispatchEvent(event, dispatch, zone);
         }
