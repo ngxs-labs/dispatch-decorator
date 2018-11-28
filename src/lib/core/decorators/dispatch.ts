@@ -24,7 +24,7 @@ import {
  * @param store - `Store` instance
  */
 function dispatchMany(events: DispatchedEvent[], store: Store): void {
-    events = events.reduce((accumulator: any[], event) => {
+    events = events.reduce((accumulator: any[], event: DispatchedEvent) => {
         if (eventIsPlainObject(event)) {
             DispatchAction.type = event.type;
             accumulator.push(new DispatchAction(event.payload));
