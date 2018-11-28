@@ -73,6 +73,6 @@ export function eventIsPlainObject<T extends Object>(event: T): boolean {
  * @param target - Target to check if it's a `Promise`
  * @returns - True if target is a `Promise`
  */
-export function isPromise(target: any): target is Promise<DispatchedEvent> {
+export function isPromise(target: any): target is Promise<DispatchedEventOrDispatchedEvents> {
     return target instanceof Promise;
 }
