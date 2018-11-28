@@ -1,7 +1,7 @@
 import { NgZone } from '@angular/core';
 import { Store } from '@ngxs/store';
 
-import { isObservable } from 'rxjs';
+import { isObservable, from } from 'rxjs';
 import { first } from 'rxjs/operators';
 
 import { InjectorAccessor } from '../services/injector-accessor.service';
@@ -10,6 +10,8 @@ import {
     DispatchedEvent,
     WrappedDispatchedEvent,
     DispatchEventFactory,
+    StreamLike,
+    DispatchedEventOrDispatchedEvents,
     isValidEvent,
     eventIsPlainObject,
     isPromise,
@@ -21,7 +23,7 @@ import {
  * @param target - Parent class that contains decorated property
  * @param key - Decorated key
  */
-function dispatchEvent(target: any, key: string | symbol): DispatchEventFactory {
+function resolveDispatchEventFactory(target: any, key: string | symbol): DispatchEventFactory {
     const store = InjectorAccessor.getInjector().get<Store>(Store);
 
     return (event: DispatchedEvent): void => {
@@ -45,16 +47,28 @@ function dispatchEvent(target: any, key: string | symbol): DispatchEventFactory 
  * @param dispatch - Function that dispatches event
  * @param zone - `NgZone` instance
  */
-function dispatchEventInZone(event: WrappedDispatchedEvent, dispatch: DispatchEventFactory, zone: NgZone): void {
-    const dispatchInsideZone = (event: DispatchedEvent) => zone.run(() => dispatch(event));
+function dispatchEvent(event: WrappedDispatchedEvent, dispatch: DispatchEventFactory, zone: NgZone): void {
+    const dispatchInsideZone = (event: DispatchedEventOrDispatchedEvents) => {
+        if (Array.isArray(event)) {
+            zone.run(() => {
+                for (let i = 0, length = event.length; i < length; i++) {
+                    dispatch(event[i]);
+                }
+            });
+        } else {
+            zone.run(() => dispatch(event));
+        }
+    };
 
     zone.runOutsideAngular(() => {
-        if (isObservable(event)) {
-            event.pipe(first()).subscribe((event) => dispatchInsideZone(event));
-        } else if (isPromise(event)) {
-            event.then((event) => dispatchInsideZone(event));
+        const isStreamOrPromise = isObservable<DispatchedEvent>(event) || isPromise(event);
+
+        if (isStreamOrPromise) {
+            from(event as StreamLike<DispatchedEventOrDispatchedEvents>).pipe(first()).subscribe((event) => {
+                dispatchInsideZone(event);
+            });
         } else {
-            dispatchInsideZone(event);
+            dispatchInsideZone(event as DispatchedEventOrDispatchedEvents);
         }
     });
 }
@@ -68,9 +82,9 @@ export function Dispatch(): PropertyDecorator {
 
         function wrapped(...args: any[]) {
             const event: WrappedDispatchedEvent = originalValue.apply(target, args);
-            const dispatch = dispatchEvent(target, key);
+            const dispatch = resolveDispatchEventFactory(target, key);
             const zone = InjectorAccessor.getInjector().get<NgZone>(NgZone);
-            dispatchEventInZone(event, dispatch, zone);
+            dispatchEvent(event, dispatch, zone);
         }
 
         if (isDescriptor(descriptor)) {

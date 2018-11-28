@@ -10,9 +10,19 @@ export interface DispatchedEvent<T = unknown> {
 }
 
 /**
+ * An alias of asynchronous operation
+ */
+export type StreamLike<T> = Observable<T> | Promise<T>;
+
+/**
+ * The user can dispatch one event or multiple
+ */
+export type DispatchedEventOrDispatchedEvents = DispatchedEvent | DispatchedEvent[];
+
+/**
  * Methods decorated with `@Dispatch()` decorator can return plain object or `Promise` or `Observable`
  */
-export type WrappedDispatchedEvent = Observable<DispatchedEvent> | Promise<DispatchedEvent> | DispatchedEvent;
+export type WrappedDispatchedEvent = StreamLike<DispatchedEventOrDispatchedEvents> | DispatchedEventOrDispatchedEvents;
 
 /**
  * Factory function alias
@@ -63,6 +73,6 @@ export function eventIsPlainObject<T extends Object>(event: T): boolean {
  * @param target - Target to check if it's a `Promise`
  * @returns - True if target is a `Promise`
  */
-export function isPromise(target: any): target is Promise<unknown> {
+export function isPromise(target: any): target is Promise<DispatchedEvent> {
     return target instanceof Promise;
 }

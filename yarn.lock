@@ -112,12 +112,6 @@
     "@angular-devkit/core" "7.1.0"
     rxjs "6.3.3"
 
-"@angular/animations@7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-7.1.0.tgz#3f03175217a45b72e53310d9ab35e69802ad9555"
-  dependencies:
-    tslib "^1.9.0"
-
 "@angular/cli@7.1.0":
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/@angular/cli/-/cli-7.1.0.tgz#c30ed717d44e9984ae6149e7bb81fd1badad96d7"
@@ -166,22 +160,6 @@
   dependencies:
     tslib "^1.9.0"
 
-"@angular/forms@7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-7.1.0.tgz#8e6ab4412c5b6ad1d3b2f0be6612d601104dcf78"
-  dependencies:
-    tslib "^1.9.0"
-
-"@angular/http@7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/http/-/http-7.1.0.tgz#9243d6a0fae5b5fd12aa9408e3dbaffad54deb9b"
-  dependencies:
-    tslib "^1.9.0"
-
-"@angular/language-service@7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/language-service/-/language-service-7.1.0.tgz#148e2f9714a6f4bd9d00a7b532b60c21cd947651"
-
 "@angular/platform-browser-dynamic@7.1.0":
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-7.1.0.tgz#c7d07f6b1c08fa12c54b4e310da930da613c7e6e"
@@ -191,12 +169,6 @@
 "@angular/platform-browser@7.1.0":
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/@angular/platform-browser/-/platform-browser-7.1.0.tgz#0d40fed536a08d66ea580f6c4d2976310d559111"
-  dependencies:
-    tslib "^1.9.0"
-
-"@angular/router@7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@angular/router/-/router-7.1.0.tgz#19b66e127065dfc2106793e81d660790422e73b0"
   dependencies:
     tslib "^1.9.0"
 
