@@ -58,20 +58,20 @@ export abstract class Utils {
      * @returns - Reduced events
      */
     public static resolveEventsThatCanDiffer(events: DispatchedEvent[]): DispatchedEvent[] {
-        const reducedEvents: DispatchedEvent[] = [];
+        const resolvedEvents: DispatchedEvent[] = [];
 
         // Avoid `Array.prototype.reduce`
         for (let i = 0, length = events.length; i < length; i++) {
             const event = events[i];
             if (Utils.eventIsPlainObject(event)) {
                 DispatchAction.type = event.type;
-                reducedEvents.push(new DispatchAction(event.payload));
+                resolvedEvents.push(new DispatchAction(event.payload));
             } else {
-                reducedEvents.push(event);
+                resolvedEvents.push(event);
             }
         }
 
-        return reducedEvents;
+        return resolvedEvents;
     }
 
     /**
