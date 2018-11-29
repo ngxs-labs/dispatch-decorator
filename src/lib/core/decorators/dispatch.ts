@@ -5,17 +5,8 @@ import { isObservable, from } from 'rxjs';
 import { first } from 'rxjs/operators';
 
 import { InjectorAccessor } from '../services/injector-accessor.service';
-import { DispatchAction } from '../actions/actions';
-import {
-    DispatchedEvent,
-    WrappedDispatchedEvent,
-    DispatchEventFactory,
-    StreamLike,
-    DispatchedEventOrDispatchedEvents,
-    eventIsPlainObject,
-    isPromise,
-    isDescriptor
-} from '../internal/internals';
+import { DispatchedEvent, WrappedDispatchedEvent, DispatchEventFactory, StreamLike, DispatchedEventOrEvents } from '../internal/internals';
+import { Utils } from '../utils/utils';
 
 /**
  * Dispatches multiple events
@@ -24,18 +15,8 @@ import {
  * @param store - `Store` instance
  */
 function dispatchMany(events: DispatchedEvent[], store: Store): void {
-    events = events.reduce((accumulator: any[], event: DispatchedEvent) => {
-        if (eventIsPlainObject(event)) {
-            DispatchAction.type = event.type;
-            accumulator.push(new DispatchAction(event.payload));
-        } else {
-            accumulator.push(event);
-        }
-
-        return accumulator;
-    }, []);
-
-    store.dispatch(events);
+    const resolvedEvents = Utils.resolveEventsThatCanDiffer(events);
+    store.dispatch(resolvedEvents);
 }
 
 /**
@@ -45,12 +26,8 @@ function dispatchMany(events: DispatchedEvent[], store: Store): void {
  * @param store - `Store` instance
  */
 function dispatchSingle(event: DispatchedEvent, store: Store): void {
-    if (eventIsPlainObject(event)) {
-        DispatchAction.type = event.type;
-        store.dispatch(new DispatchAction(event.payload));
-    } else {
-        store.dispatch(event);
-    }
+    const resolvedEvent = Utils.resolveEventThatCanDiffer(event);
+    store.dispatch(resolvedEvent);
 }
 
 /**
@@ -61,7 +38,7 @@ function dispatchSingle(event: DispatchedEvent, store: Store): void {
 function resolveDispatchEventFactory(): DispatchEventFactory {
     const store = InjectorAccessor.getInjector().get<Store>(Store);
 
-    return (event: DispatchedEventOrDispatchedEvents): void => {
+    return (event: DispatchedEventOrEvents): void => {
         if (Array.isArray(event)) {
             dispatchMany(event, store);
         } else {
@@ -76,17 +53,17 @@ function resolveDispatchEventFactory(): DispatchEventFactory {
  * @param zone - `NgZone` instance
  */
 function dispatchEvent(event: WrappedDispatchedEvent, dispatch: DispatchEventFactory, zone: NgZone): void {
-    const dispatchInsideZone = (event: DispatchedEventOrDispatchedEvents) => zone.run(() => dispatch(event));
+    const dispatchInsideZone = (event: DispatchedEventOrEvents) => zone.run(() => dispatch(event));
 
     zone.runOutsideAngular(() => {
-        const isStreamOrPromise = isObservable<DispatchedEvent>(event) || isPromise(event);
+        const isStreamOrPromise = isObservable<DispatchedEvent>(event) || Utils.isPromise(event);
 
         if (isStreamOrPromise) {
-            from(event as StreamLike<DispatchedEventOrDispatchedEvents>).pipe(first()).subscribe((event) => {
+            from(event as StreamLike<DispatchedEventOrEvents>).pipe(first()).subscribe((event) => {
                 dispatchInsideZone(event);
             });
         } else {
-            dispatchInsideZone(event as DispatchedEventOrDispatchedEvents);
+            dispatchInsideZone(event as DispatchedEventOrEvents);
         }
     });
 }
@@ -105,14 +82,12 @@ export function Dispatch(): PropertyDecorator {
             dispatchEvent(event, dispatch, zone);
         }
 
-        if (isDescriptor(descriptor)) {
+        if (Utils.isDescriptor(descriptor)) {
             originalValue = descriptor.value!;
             descriptor.value = wrapped;
         } else {
             Object.defineProperty(target, key, {
-                set: (lambda: Function) => {
-                    originalValue = lambda;
-                },
+                set: (lambda: Function) => originalValue = lambda,
                 get: () => wrapped
             });
         }
