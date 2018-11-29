@@ -1,41 +1,48 @@
 import { NgZone } from '@angular/core';
 import { Store } from '@ngxs/store';
 
-import { isObservable } from 'rxjs';
+import { isObservable, from } from 'rxjs';
 import { first } from 'rxjs/operators';
 
 import { InjectorAccessor } from '../services/injector-accessor.service';
-import { DispatchAction } from '../actions/actions';
-import {
-    DispatchedEvent,
-    WrappedDispatchedEvent,
-    DispatchEventFactory,
-    isValidEvent,
-    eventIsPlainObject,
-    isPromise,
-    isDescriptor
-} from '../internal/internals';
+import { DispatchedEvent, WrappedDispatchedEvent, DispatchEventFactory, StreamLike, DispatchedEventOrEvents } from '../internal/internals';
+import { Utils } from '../utils/utils';
+
+/**
+ * Dispatches multiple events
+ *
+ * @param events - Array that contain plain objects or action instances
+ * @param store - `Store` instance
+ */
+function dispatchMany(events: DispatchedEvent[], store: Store): void {
+    const resolvedEvents = Utils.resolveEventsThatCanDiffer(events);
+    store.dispatch(resolvedEvents);
+}
+
+/**
+ * Dispatches single event
+ *
+ * @param event - Single dispatch event, can be object literal or action instance
+ * @param store - `Store` instance
+ */
+function dispatchSingle(event: DispatchedEvent, store: Store): void {
+    const resolvedEvent = Utils.resolveEventThatCanDiffer(event);
+    store.dispatch(resolvedEvent);
+}
 
 /**
  * @internal
  * @param target - Parent class that contains decorated property
  * @param key - Decorated key
  */
-function dispatchEvent(target: any, key: string | symbol): DispatchEventFactory {
+function resolveDispatchEventFactory(): DispatchEventFactory {
     const store = InjectorAccessor.getInjector().get<Store>(Store);
 
-    return (event: DispatchedEvent): void => {
-        const isInvalidEvent = !isValidEvent(event);
-
-        if (isInvalidEvent) {
-            throw new Error(`Your method \`${target.name}.${key.toString()}\` seems to return an invalid object`);
-        }
-
-        if (eventIsPlainObject(event)) {
-            DispatchAction.type = event.type;
-            store.dispatch(new DispatchAction(event.payload));
+    return (event: DispatchedEventOrEvents): void => {
+        if (Array.isArray(event)) {
+            dispatchMany(event, store);
         } else {
-            store.dispatch(event);
+            dispatchSingle(event, store);
         }
     };
 }
@@ -45,16 +52,18 @@ function dispatchEvent(target: any, key: string | symbol): DispatchEventFactory 
  * @param dispatch - Function that dispatches event
  * @param zone - `NgZone` instance
  */
-function dispatchEventInZone(event: WrappedDispatchedEvent, dispatch: DispatchEventFactory, zone: NgZone): void {
-    const dispatchInsideZone = (event: DispatchedEvent) => zone.run(() => dispatch(event));
+function dispatchEvent(event: WrappedDispatchedEvent, dispatch: DispatchEventFactory, zone: NgZone): void {
+    const dispatchInsideZone = (event: DispatchedEventOrEvents) => zone.run(() => dispatch(event));
 
     zone.runOutsideAngular(() => {
-        if (isObservable(event)) {
-            event.pipe(first()).subscribe((event) => dispatchInsideZone(event));
-        } else if (isPromise(event)) {
-            event.then((event) => dispatchInsideZone(event));
+        const isStreamOrPromise = isObservable<DispatchedEvent>(event) || Utils.isPromise(event);
+
+        if (isStreamOrPromise) {
+            from(event as StreamLike<DispatchedEventOrEvents>).pipe(first()).subscribe((event) => {
+                dispatchInsideZone(event);
+            });
         } else {
-            dispatchInsideZone(event);
+            dispatchInsideZone(event as DispatchedEventOrEvents);
         }
     });
 }
@@ -68,19 +77,17 @@ export function Dispatch(): PropertyDecorator {
 
         function wrapped(...args: any[]) {
             const event: WrappedDispatchedEvent = originalValue.apply(target, args);
-            const dispatch = dispatchEvent(target, key);
+            const dispatch = resolveDispatchEventFactory();
             const zone = InjectorAccessor.getInjector().get<NgZone>(NgZone);
-            dispatchEventInZone(event, dispatch, zone);
+            dispatchEvent(event, dispatch, zone);
         }
 
-        if (isDescriptor(descriptor)) {
+        if (Utils.isDescriptor(descriptor)) {
             originalValue = descriptor.value!;
             descriptor.value = wrapped;
         } else {
             Object.defineProperty(target, key, {
-                set: (lambda: Function) => {
-                    originalValue = lambda;
-                },
+                set: (lambda: Function) => originalValue = lambda,
                 get: () => wrapped
             });
         }

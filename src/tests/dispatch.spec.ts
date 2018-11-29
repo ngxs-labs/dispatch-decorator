@@ -3,7 +3,7 @@ import { Component, NgZone } from '@angular/core';
 import { NgxsModule, State, Action, Store, StateContext, Actions, ofActionSuccessful } from '@ngxs/store';
 
 import { of } from 'rxjs';
-import { exhaustMap, delay, first } from 'rxjs/operators';
+import { exhaustMap, delay, first, filter, concatMap } from 'rxjs/operators';
 
 import { NgxsDispatchPluginModule, Dispatch } from '../public_api';
 
@@ -200,8 +200,11 @@ describe(NgxsDispatchPluginModule.name, () => {
             @Dispatch()
             public addTodo = async () => {
                 await asyncTimeout(200);
+
                 expect(NgZone.isInAngularZone()).toBeFalsy();
+
                 await asyncTimeout(200);
+
                 return new AddTodo({
                     text: 'Buy some coffee',
                     completed: false
@@ -230,5 +233,45 @@ describe(NgxsDispatchPluginModule.name, () => {
         });
 
         fixture.componentInstance.addTodo();
+    });
+
+    it('should be possible to dispatch an array of events', (done: jest.DoneCallback) => {
+        @Component({ template: '' })
+        class MockComponent {
+            @Dispatch()
+            public addTodos = () => {
+                const event = new AddTodo({
+                    text: 'Buy some coffee',
+                    completed: false
+                });
+
+                return [event, event];
+            }
+        }
+
+        TestBed.configureTestingModule({
+            imports: [
+                NgxsModule.forRoot([TodosState]),
+                NgxsDispatchPluginModule.forRoot()
+            ],
+            declarations: [
+                MockComponent
+            ]
+        });
+
+        const store: Store = TestBed.get(Store);
+        const actions$: Actions = TestBed.get(Actions);
+        const fixture = TestBed.createComponent(MockComponent);
+
+        actions$.pipe(
+            ofActionSuccessful(AddTodo),
+            concatMap(() => store.selectOnce<Todo[]>(({ todos }) => todos)),
+            filter(({ length }) => length === 2)
+        ).subscribe(({ length }) => {
+            expect(length).toBe(2);
+            done();
+        });
+
+        fixture.componentInstance.addTodos();
     });
 });
