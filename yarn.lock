@@ -10,13 +10,6 @@
     jest-preset-angular "^6.0.0"
     lodash "^4.17.10"
 
-"@angular-devkit/architect@0.11.0":
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/architect/-/architect-0.11.0.tgz#25b75f5d8ca00cedd414ede12db87364c6c5aa45"
-  dependencies:
-    "@angular-devkit/core" "7.1.0"
-    rxjs "6.3.3"
-
 "@angular-devkit/architect@0.11.2":
   version "0.11.2"
   resolved "https://registry.yarnpkg.com/@angular-devkit/architect/-/architect-0.11.2.tgz#f0bcaa494c713f8648a5da2490e2b67cd0e57503"
@@ -33,15 +26,16 @@
     "@angular-devkit/core" "7.1.3"
     rxjs "6.3.3"
 
-"@angular-devkit/build-angular@0.11.0":
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/build-angular/-/build-angular-0.11.0.tgz#6dd1c5b340ab883f744d51973957f80dd397c852"
+"@angular-devkit/build-angular@0.11.3":
+  version "0.11.3"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/build-angular/-/build-angular-0.11.3.tgz#77fca86b9c9df4b4b0e0e4ae0d9aa2eddd5d0d05"
+  integrity sha512-jFsCs4g0LLesd4bzbrwe4X7o38oo/xrLTrVeEuEPXSu5x/qEzWNhPsOAngJnXvcaILXdimXi6xr6DQazHsiuag==
   dependencies:
-    "@angular-devkit/architect" "0.11.0"
-    "@angular-devkit/build-optimizer" "0.11.0"
-    "@angular-devkit/build-webpack" "0.11.0"
-    "@angular-devkit/core" "7.1.0"
-    "@ngtools/webpack" "7.1.0"
+    "@angular-devkit/architect" "0.11.3"
+    "@angular-devkit/build-optimizer" "0.11.3"
+    "@angular-devkit/build-webpack" "0.11.3"
+    "@angular-devkit/core" "7.1.3"
+    "@ngtools/webpack" "7.1.3"
     ajv "6.5.3"
     autoprefixer "9.3.1"
     circular-dependency-plugin "5.0.2"
@@ -96,32 +90,24 @@
     rxjs "6.3.3"
     semver "5.5.1"
 
-"@angular-devkit/build-optimizer@0.11.0":
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/build-optimizer/-/build-optimizer-0.11.0.tgz#3da812b922930bf991a928d7fcf554d813a02ee6"
+"@angular-devkit/build-optimizer@0.11.3":
+  version "0.11.3"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/build-optimizer/-/build-optimizer-0.11.3.tgz#274e3a31917a5041871d28310df22d03c4690589"
+  integrity sha512-CcRKITGpw1ALwLlU090ZcV1R18RTT4tCk5lP1abT3Hr+ql41HabS4GfRlCb16+ugpi4TWWibmBj3xehKGQaVYQ==
   dependencies:
     loader-utils "1.1.0"
     source-map "0.5.6"
     typescript "3.1.6"
     webpack-sources "1.2.0"
 
-"@angular-devkit/build-webpack@0.11.0":
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/build-webpack/-/build-webpack-0.11.0.tgz#10249dba2b6becc112ac913504e1dab096ddf219"
+"@angular-devkit/build-webpack@0.11.3":
+  version "0.11.3"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/build-webpack/-/build-webpack-0.11.3.tgz#b8394f6e4381f1754a4fe06f83c719bd2b789d7a"
+  integrity sha512-Sm1WkuY9JKExEkfEd16DKQhq2LLNqiTTQMX9r+FSy0GF2WW/PG21+lj9/Wb00eNSZdNYTYkgxZGHcFtDGjwvMQ==
   dependencies:
-    "@angular-devkit/architect" "0.11.0"
-    "@angular-devkit/core" "7.1.0"
+    "@angular-devkit/architect" "0.11.3"
+    "@angular-devkit/core" "7.1.3"
     rxjs "6.3.3"
-
-"@angular-devkit/core@7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-7.1.0.tgz#5374736843acc2405937ad61c2c4818fad64b72d"
-  dependencies:
-    ajv "6.5.3"
-    chokidar "2.0.4"
-    fast-json-stable-stringify "2.0.0"
-    rxjs "6.3.3"
-    source-map "0.7.3"
 
 "@angular-devkit/core@7.1.2":
   version "7.1.2"
@@ -232,11 +218,12 @@
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@ngtools/json-schema/-/json-schema-1.1.0.tgz#c3a0c544d62392acc2813a42c8a0dc6f58f86922"
 
-"@ngtools/webpack@7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-7.1.0.tgz#20f401f85822923032f19dbd745ad4efb027847d"
+"@ngtools/webpack@7.1.3":
+  version "7.1.3"
+  resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-7.1.3.tgz#4c67aabb2d05e5f16d9927ee792a24e01dc46140"
+  integrity sha512-WQB4La834DyRjZxT15w9IuwohgOwpJWBI5V6jWl1vBn3/oBUW5sMhq1fx/iclOLJBw8xCOl7Ni57g+H2WlK6Mg==
   dependencies:
-    "@angular-devkit/core" "7.1.0"
+    "@angular-devkit/core" "7.1.3"
     enhanced-resolve "4.1.0"
     rxjs "6.3.3"
     tree-kill "1.2.0"
