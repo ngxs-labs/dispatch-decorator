@@ -17,14 +17,6 @@
     "@angular-devkit/core" "7.1.0"
     rxjs "6.3.3"
 
-"@angular-devkit/architect@0.11.2":
-  version "0.11.2"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/architect/-/architect-0.11.2.tgz#f0bcaa494c713f8648a5da2490e2b67cd0e57503"
-  integrity sha512-RTwpxc4glRsO6EW50WryZ2UZ+75hABnaRabRp7QsgADJylA10ANX2H3OjhRQQ6nQ3opE3w9GydM+5sHBKy6hPw==
-  dependencies:
-    "@angular-devkit/core" "7.1.2"
-    rxjs "6.3.3"
-
 "@angular-devkit/architect@0.11.3":
   version "0.11.3"
   resolved "https://registry.yarnpkg.com/@angular-devkit/architect/-/architect-0.11.3.tgz#971135f340d073d434dc2ada1ae3873c77387243"
@@ -86,13 +78,13 @@
   optionalDependencies:
     node-sass "4.10.0"
 
-"@angular-devkit/build-ng-packagr@0.11.2":
-  version "0.11.2"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/build-ng-packagr/-/build-ng-packagr-0.11.2.tgz#a6719b920c07d58676dd4fc55e6787cf54989cfe"
-  integrity sha512-CzD5Nc/IQAXw/7vcX65kKQNeDCOIsEDOX/DjYFkDIhJiHkzZy0ctbYVYBbDcGs0e6fDqPLpa2fYN9evE/1VxzA==
+"@angular-devkit/build-ng-packagr@0.11.3":
+  version "0.11.3"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/build-ng-packagr/-/build-ng-packagr-0.11.3.tgz#3d7e885642980d61af9667bb2e7bd0799bf4ddf2"
+  integrity sha512-l4cpJRG+qFA19GxHrG2ZMU3YwFT/yvZIqCeEdHTJjNZvECkqm+2SGMIVJhHfa2EZ8D1Hrt+ANQ+fZDxQLY1f8w==
   dependencies:
-    "@angular-devkit/architect" "0.11.2"
-    "@angular-devkit/core" "7.1.2"
+    "@angular-devkit/architect" "0.11.3"
+    "@angular-devkit/core" "7.1.3"
     rxjs "6.3.3"
     semver "5.5.1"
 
@@ -116,17 +108,6 @@
 "@angular-devkit/core@7.1.0":
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-7.1.0.tgz#5374736843acc2405937ad61c2c4818fad64b72d"
-  dependencies:
-    ajv "6.5.3"
-    chokidar "2.0.4"
-    fast-json-stable-stringify "2.0.0"
-    rxjs "6.3.3"
-    source-map "0.7.3"
-
-"@angular-devkit/core@7.1.2":
-  version "7.1.2"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-7.1.2.tgz#86b0e5a4cdeaa3198f6b1b50e7e114fac403e57c"
-  integrity sha512-LyjHGuLnLWrgX7SYDkKmc3eW4H5uuaoC+CXYjRfgx3qundrLfvTCRgNGC6FPjhQNnVXH9qar+j9P1aMmKFb4Lw==
   dependencies:
     ajv "6.5.3"
     chokidar "2.0.4"
