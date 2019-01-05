@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { Component, NgZone } from '@angular/core';
 import { NgxsModule, State, Action, Store, StateContext, Actions, ofActionSuccessful } from '@ngxs/store';
 
-import { of } from 'rxjs';
-import { exhaustMap, delay, first, filter, concatMap } from 'rxjs/operators';
+import { of, Observable } from 'rxjs';
+import { delay, first, filter, concatMapTo, take, map } from 'rxjs/operators';
 
 import { NgxsDispatchPluginModule, Dispatch } from '../public_api';
 
@@ -145,7 +145,7 @@ describe(NgxsDispatchPluginModule.name, () => {
 
         actions$.pipe(
             ofActionSuccessful(AddTodo),
-            exhaustMap(() => store.selectOnce<Todo[]>(({ todos }) => todos))
+            map(() => store.selectSnapshot<Todo[]>(({ todos }) => todos))
         ).subscribe(({ length }) => {
             expect(length).toBe(1);
         });
@@ -179,7 +179,7 @@ describe(NgxsDispatchPluginModule.name, () => {
 
         actions$.pipe(
             ofActionSuccessful(AddTodo),
-            exhaustMap(() => store.selectOnce<Todo[]>(({ todos }) => todos))
+            map(() => store.selectSnapshot<Todo[]>(({ todos }) => todos))
         ).subscribe(({ length }) => {
             expect(length).toBe(1);
             done();
@@ -265,7 +265,55 @@ describe(NgxsDispatchPluginModule.name, () => {
 
         actions$.pipe(
             ofActionSuccessful(AddTodo),
-            concatMap(() => store.selectOnce<Todo[]>(({ todos }) => todos)),
+            map(() => store.selectSnapshot<Todo[]>(({ todos }) => todos)),
+            filter(({ length }) => length === 2)
+        ).subscribe((({ length }) => {
+            expect(length).toBe(2);
+            done();
+        }));
+
+        fixture.componentInstance.addTodos();
+    });
+
+    it('should be possible to use queue of events', (done: jest.DoneCallback) => {
+        @Component({ template: '' })
+        class MockComponent {
+            @Dispatch()
+            public addTodos(): Observable<AddTodo> {
+                return of(null).pipe(
+                    concatMapTo([
+                        new AddTodo({
+                            text: 'Buy some coffee',
+                            completed: false
+                        }),
+
+                        new AddTodo({
+                            text: 'Buy some tea',
+                            completed: false
+                        })
+                    ])
+                );
+            }
+        }
+
+        TestBed.configureTestingModule({
+            imports: [
+                NgxsModule.forRoot([TodosState]),
+                NgxsDispatchPluginModule.forRoot()
+            ],
+            declarations: [
+                MockComponent
+            ]
+        });
+
+        const store: Store = TestBed.get(Store);
+        const actions$: Actions = TestBed.get(Actions);
+        const fixture = TestBed.createComponent(MockComponent);
+
+        actions$.pipe(
+            ofActionSuccessful(AddTodo),
+            take(2),
+            map(() => store.selectSnapshot<Todo[]>(({ todos }) => todos)),
             filter(({ length }) => length === 2)
         ).subscribe(({ length }) => {
             expect(length).toBe(2);

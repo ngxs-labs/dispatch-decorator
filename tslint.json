@@ -1,7 +1,6 @@
 {
-    "rulesDirectory": [
-        "node_modules/codelyzer"
-    ],
+    "rulesDirectory": ["node_modules/codelyzer"],
+    "extends": ["tslint-sonarts"],
     "rules": {
         "arrow-return-shorthand": true,
         "callable-types": true,
