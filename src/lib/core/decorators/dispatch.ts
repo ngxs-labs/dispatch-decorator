@@ -2,7 +2,6 @@ import { NgZone } from '@angular/core';
 import { Store } from '@ngxs/store';
 
 import { isObservable, from } from 'rxjs';
-import { first } from 'rxjs/operators';
 
 import { InjectorAccessor } from '../services/injector-accessor.service';
 import { DispatchedEvent, WrappedDispatchedEvent, DispatchEventFactory, StreamLike, DispatchedEventOrEvents } from '../internal/internals';
@@ -54,18 +53,15 @@ function resolveDispatchEventFactory(): DispatchEventFactory {
  */
 function dispatchEvent(event: WrappedDispatchedEvent, dispatch: DispatchEventFactory, zone: NgZone): void {
     const dispatchInsideZone = (event: DispatchedEventOrEvents) => zone.run(() => dispatch(event));
+    const isStreamOrPromise = isObservable<DispatchedEvent>(event) || Utils.isPromise(event);
 
-    zone.runOutsideAngular(() => {
-        const isStreamOrPromise = isObservable<DispatchedEvent>(event) || Utils.isPromise(event);
-
-        if (isStreamOrPromise) {
-            from(event as StreamLike<DispatchedEventOrEvents>).pipe(first()).subscribe((event) => {
-                dispatchInsideZone(event);
-            });
-        } else {
-            dispatchInsideZone(event as DispatchedEventOrEvents);
-        }
-    });
+    if (isStreamOrPromise) {
+        from(event as StreamLike<DispatchedEventOrEvents>).subscribe((event) => {
+            dispatchInsideZone(event);
+        });
+    } else {
+        dispatchInsideZone(event as DispatchedEventOrEvents);
+    }
 }
 
 /**
@@ -79,7 +75,7 @@ export function Dispatch(): PropertyDecorator {
             const event: WrappedDispatchedEvent = originalValue.apply(target, args);
             const dispatch = resolveDispatchEventFactory();
             const zone = InjectorAccessor.getInjector().get<NgZone>(NgZone);
-            dispatchEvent(event, dispatch, zone);
+            zone.runOutsideAngular(() => dispatchEvent(event, dispatch, zone));
         }
 
         if (Utils.isDescriptor(descriptor)) {
