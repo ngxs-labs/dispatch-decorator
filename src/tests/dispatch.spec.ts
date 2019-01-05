@@ -3,7 +3,7 @@ import { Component, NgZone } from '@angular/core';
 import { NgxsModule, State, Action, Store, StateContext, Actions, ofActionSuccessful } from '@ngxs/store';
 
 import { of, Observable } from 'rxjs';
-import { exhaustMap, delay, first, filter, concatMapTo, take, map } from 'rxjs/operators';
+import { delay, first, filter, concatMapTo, take, map } from 'rxjs/operators';
 
 import { NgxsDispatchPluginModule, Dispatch } from '../public_api';
 
@@ -145,7 +145,7 @@ describe(NgxsDispatchPluginModule.name, () => {
 
         actions$.pipe(
             ofActionSuccessful(AddTodo),
-            exhaustMap(() => store.selectOnce<Todo[]>(({ todos }) => todos))
+            map(() => store.selectSnapshot<Todo[]>(({ todos }) => todos))
         ).subscribe(({ length }) => {
             expect(length).toBe(1);
         });
@@ -179,7 +179,7 @@ describe(NgxsDispatchPluginModule.name, () => {
 
         actions$.pipe(
             ofActionSuccessful(AddTodo),
-            exhaustMap(() => store.selectOnce<Todo[]>(({ todos }) => todos))
+            map(() => store.selectSnapshot<Todo[]>(({ todos }) => todos))
         ).subscribe(({ length }) => {
             expect(length).toBe(1);
             done();
@@ -265,7 +265,7 @@ describe(NgxsDispatchPluginModule.name, () => {
 
         actions$.pipe(
             ofActionSuccessful(AddTodo),
-            exhaustMap(() => store.selectOnce<Todo[]>(({ todos }) => todos)),
+            map(() => store.selectSnapshot<Todo[]>(({ todos }) => todos)),
             filter(({ length }) => length === 2)
         ).subscribe((({ length }) => {
             expect(length).toBe(2);
