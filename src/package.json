@@ -20,7 +20,7 @@
     "peerDependencies": {
         "@angular/core": "^7.0.0",
         "@ngxs/store": ">=3.3.4",
-        "rxjs": ">=6.1.0"
+        "rxjs": ">=6.4.0"
     },
     "ngPackage": {
         "lib": {
