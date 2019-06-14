@@ -34,10 +34,10 @@ import { NgxsModule } from '@ngxs/store';
 import { NgxsDispatchPluginModule } from '@ngxs-labs/dispatch-decorator';
 
 @NgModule({
-    imports: [
-        NgxsModule.forRoot(states),
-        NgxsDispatchPluginModule.forRoot()
-    ]
+  imports: [
+    NgxsModule.forRoot(states),
+    NgxsDispatchPluginModule.forRoot()
+  ]
 })
 export class AppModule {}
 ```
@@ -50,27 +50,27 @@ export class AppModule {}
 import { State, Action, StateContext } from '@ngxs/store';
 
 export class Increment {
-    public static readonly type = '[Counter] Increment';
+  public static readonly type = '[Counter] Increment';
 }
 
 export class Decrement {
-    public static readonly type = '[Counter] Decrement';
+  public static readonly type = '[Counter] Decrement';
 }
 
 @State<number>({
-    name: 'counter',
-    defaults: 0
+  name: 'counter',
+  defaults: 0
 })
 export class CounterState {
-    @Action(Increment)
-    public increment({ setState, getState }: StateContext<number>) {
-        setState(getState() + 1);
-    }
+  @Action(Increment)
+  public increment({ setState, getState }: StateContext<number>) {
+    setState(getState() + 1);
+  }
 
-    @Action(Decrement)
-    public decrement({ setState, getState }: StateContext<number>) {
-        setState(getState() - 1);
-    }
+  @Action(Decrement)
+  public decrement({ setState, getState }: StateContext<number>) {
+    setState(getState() - 1);
+  }
 }
 ```
 
@@ -86,25 +86,25 @@ import { Observable } from 'rxjs';
 import { CounterState, Increment, Decrement } from './counter.state';
 
 @Component({
-    selector: 'app-root',
-    template: `
-        <ng-container *ngIf="counter$ | async as counter">
-            <h1>{{ counter }}</h1>
-        </ng-container>
+  selector: 'app-root',
+  template: `
+    <ng-container *ngIf="counter$ | async as counter">
+      <h1>{{ counter }}</h1>
+    </ng-container>
 
-        <button (click)="increment()">Increment</button>
-        <button (click)="decrement()">Decrement</button>
-    `
+    <button (click)="increment()">Increment</button>
+    <button (click)="decrement()">Decrement</button>
+  `
 })
 export class AppComponent {
-    @Select(CounterState)
-    public counter$: Observable<number>;
+  @Select(CounterState)
+  public counter$: Observable<number>;
 
-    @Dispatch()
-    public increment = () => new Increment()
+  @Dispatch()
+  public increment = () => new Increment();
 
-    @Dispatch()
-    public decrement = () => new Decrement()
+  @Dispatch()
+  public decrement = () => new Decrement();
 }
 ```
 
@@ -112,22 +112,23 @@ Also, your dispatchers can be asyncrhonous, they can return `Promise` or `Observ
 
 ```typescript
 export class AppComponent {
-    // `ApiService` is defined somewhere
-    constructor(private api: ApiService) {}
+  // `ApiService` is defined somewhere
+  constructor(private api: ApiService) {}
 
-    @Dispatch()
-    public async setAppSchema(): Promise<SetAppSchema> {
-        const { version, shouldUseGraphQL } = await this.api.getInformation();
-        const { schema } = await this.api.getSchemaForVersion(version);
-        return new SetAppSchema(schema);
-    }
+  @Dispatch()
+  public async setAppSchema(): Promise<SetAppSchema> {
+    const { version, shouldUseGraphQL } = await this.api.getInformation();
+    const { schema } = await this.api.getSchemaForVersion(version);
+    return new SetAppSchema(schema);
+  }
 
-    // OR
+  // OR using lambda
 
-    @Dispatch()
-    public setAppInformation = () => this.api.getInformation().pipe(
-        switchMap(({ version }) => this.api.getSchemaForVersion(version)),
-        map(({ schema }) => new SetAppSchema(schema))
+  @Dispatch()
+  public setAppInformation = () =>
+    this.api.getInformation().pipe(
+      switchMap(({ version }) => this.api.getSchemaForVersion(version)),
+      map(({ schema }) => new SetAppSchema(schema))
     );
 }
 ```
@@ -140,9 +141,9 @@ Your dispatchers can also return arrays with events inside:
 
 ```typescript
 export class AppComponent {
-    @Dispatch()
-    public setLanguageAndNavigateHome = (language: string) => {
-        return [new SetLanguage(language), new Navigate('/')];
-    }
+  @Dispatch()
+  public setLanguageAndNavigateHome = (language: string) => {
+    return [new SetLanguage(language), new Navigate('/')];
+  };
 }
 ```

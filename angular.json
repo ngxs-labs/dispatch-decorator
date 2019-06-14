@@ -1,47 +1,45 @@
 {
-    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-    "version": 1,
-    "newProjectRoot": "projects",
-    "projects": {
-        "dispatch": {
-            "root": "",
-            "sourceRoot": "src",
-            "projectType": "library",
-            "prefix": "dispatch",
-            "architect": {
-                "build": {
-                    "builder": "@angular-devkit/build-ng-packagr:build",
-                    "options": {
-                        "tsConfig": "src/tsconfig.lib.json",
-                        "project": "src/ng-package.json"
-                    },
-                    "configurations": {
-                        "production": {
-                            "project": "src/ng-package.prod.json"
-                        }
-                    }
-                },
-
-                "test": {
-                    "builder": "@angular-builders/jest:run",
-                    "options": {
-                        "no-cache": true
-                    }
-                },
-
-                "lint": {
-                    "builder": "@angular-devkit/build-angular:tslint",
-                    "options": {
-                        "tsConfig": [
-                            "src/tsconfig.lib.json",
-                            "src/tsconfig.spec.json"
-                        ],
-                        "exclude": [
-                            "**/node_modules/**"
-                        ]
-                    }
-                }
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "dispatch": {
+      "root": "",
+      "sourceRoot": "src",
+      "projectType": "library",
+      "prefix": "dispatch",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "src/tsconfig.lib.json",
+            "project": "src/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "project": "src/ng-package.prod.json"
             }
+          }
+        },
+        "test": {
+          "builder": "@angular-builders/jest:run",
+          "options": {
+            "no-cache": false
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "src/tsconfig.lib.json",
+              "tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
         }
+      }
     }
+  }
 }

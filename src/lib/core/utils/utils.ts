@@ -1,89 +1,46 @@
-import { DispatchedEventOrEvents, ObjectLiteralAction, DispatchedEvent } from '../internal/internals';
 import { DispatchAction } from '../actions/actions';
+import {
+  DispatchedEventOrEvents,
+  ObjectLiteralAction,
+  DispatchedEvent
+} from '../internal/internals';
 
-/**
- * @internal
- */
-export abstract class Utils {
-    /**
-     * @param target - Target to check if it's a `Promise`
-     * @returns - True if target is a `Promise`
-     */
-    public static isPromise(target: any): target is Promise<DispatchedEventOrEvents> {
-        return target instanceof Promise;
+export function isPromise(target: unknown): target is Promise<DispatchedEventOrEvents> {
+  return target instanceof Promise;
+}
+
+export function isMethodDecorator(
+  descriptor?: any
+): descriptor is TypedPropertyDescriptor<Function> {
+  return !!descriptor && descriptor.hasOwnProperty('value');
+}
+
+function eventIsPlainObject(event: any): event is ObjectLiteralAction {
+  return event.constructor === Object;
+}
+
+export function composeEventsThatMayDiffer(events: DispatchedEvent[]): DispatchedEvent[] {
+  const length = events.length;
+  const composed = new Array(length);
+
+  for (let i = 0; i < length; i++) {
+    const event = events[i];
+
+    if (eventIsPlainObject(event)) {
+      DispatchAction.type = event.type;
+      composed[i] = new DispatchAction(event.payload);
+    } else {
+      composed[i] = event;
     }
+  }
 
-    /**
-     * Event can be a plain object or an instance of some class
-     *
-     * @internal
-     * @param event - Dispatched event
-     * @returns - True if plain object or instance constructor has `type` property
-     */
-    public static hasTypeProperty<T extends Object>(event: T): boolean {
-        return event.hasOwnProperty('type') || event.constructor.hasOwnProperty('type');
-    }
+  return composed;
+}
 
-    /**
-     * @internal
-     * @param event - Dispatched event
-     * @returns - True if event is an object and has `type` property
-     */
-    public static isValidEvent<T extends Object>(event: T): boolean {
-        return !!event && typeof event === 'object' && this.hasTypeProperty<T>(event);
-    }
+export function flatten<T>(value: T | T[]): T[] {
+  return Array.isArray(value) ? value : [value];
+}
 
-    /**
-     * Descriptor exists only in case of method decorating
-     *
-     * @internal
-     * @param descriptor - Property descriptor
-     * @returns - True if descriptor exists
-     */
-    public static isDescriptor(descriptor?: any): descriptor is TypedPropertyDescriptor<Function> {
-        return !!descriptor && descriptor.hasOwnProperty('value');
-    }
-
-    /**
-     * @internal
-     * @param event - Dispatched event
-     * @returns - True if event is just a plain object without constructor
-     */
-    public static eventIsPlainObject(event: any): event is ObjectLiteralAction {
-        return event.constructor === Object;
-    }
-
-    /**
-     * @param events - Events that differ from each other like custom event or object literal
-     * @returns - Reduced events
-     */
-    public static resolveEventsThatCanDiffer(events: DispatchedEvent[]): DispatchedEvent[] {
-        const resolvedEvents: DispatchedEvent[] = [];
-
-        // Avoid `Array.prototype.reduce`
-        for (let i = 0, length = events.length; i < length; i++) {
-            const event = events[i];
-            if (Utils.eventIsPlainObject(event)) {
-                DispatchAction.type = event.type;
-                resolvedEvents.push(new DispatchAction(event.payload));
-            } else {
-                resolvedEvents.push(event);
-            }
-        }
-
-        return resolvedEvents;
-    }
-
-    /**
-     * @param event - Event that can differ
-     * @returns - Resolved event
-     */
-    public static resolveEventThatCanDiffer(event: DispatchedEvent): DispatchedEvent {
-        if (this.eventIsPlainObject(event)) {
-            DispatchAction.type = event.type;
-            return new DispatchAction(event.payload);
-        }
-
-        return event;
-    }
+export function isInteger(value: unknown): value is number {
+  return typeof value === 'number';
 }
