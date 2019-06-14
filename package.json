@@ -1,82 +1,81 @@
 {
-    "name": "dispatch",
-    "version": "0.0.0",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/ngxs-labs/dispatch.git"
+  "name": "dispatch",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngxs-labs/dispatch.git"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/ngxs-labs/dispatch#readme",
+  "bugs": {
+    "url": "https://github.com/ngxs-labs/dispatch/issues"
+  },
+  "keywords": [
+    "ngxs",
+    "redux",
+    "store"
+  ],
+  "contributors": [
+    {
+      "name": "Artur Androsovych",
+      "email": "arthurandrosovich@gmail.com"
     },
-    "license": "MIT",
-    "homepage": "https://github.com/ngxs-labs/dispatch#readme",
-    "bugs": {
-        "url": "https://github.com/ngxs-labs/dispatch/issues"
-    },
-    "keywords": [
-        "ngxs",
-        "redux",
-        "store"
-    ],
-    "contributors": [
-        {
-            "name": "Artur Androsovych",
-            "email": "arthurandrosovich@gmail.com"
-        },
-        {
-            "name": "Maxim Ivanov",
-            "email": "splincodewd@yandex.ru"
-        }
-    ],
-    "scripts": {
-        "ng": "ng",
-        "start": "ng serve",
-        "build": "ng build",
-        "e2e": "ng e2e",
-        "// - UTILS": "Utility scripts",
-        "dispatch:lint": "ng lint dispatch",
-        "dispatch:test": "ng test --runInBand",
-        "dispatch:build": "ts-node ./tools/build && ts-node ./tools/copy-readme",
-        "dispatch:rollup": "rollup -c rollup.config.js",
-        "// - CI": "CI pipelines",
-        "ci:pipelines": "npm-run-all dispatch:*",
-        "// - npm": "npm scripts",
-        "bump": "ts-node ./tools/bump"
-    },
-    "private": true,
-    "dependencies": {
-        "@angular/common": "8.0.1",
-        "@angular/compiler": "8.0.1",
-        "@angular/core": "8.0.1",
-        "@angular/platform-browser": "8.0.1",
-        "@angular/platform-browser-dynamic": "8.0.1",
-        "@ngxs/store": "3.4.3",
-        "core-js": "2.6.5",
-        "rxjs": "6.5.2",
-        "zone.js": "0.9.1"
-    },
-    "devDependencies": {
-        "@angular-builders/jest": "7.4.2",
-        "@angular-devkit/build-angular": "0.13.9",
-        "@angular-devkit/build-ng-packagr": "0.13.9",
-        "@angular/cli": "7.3.9",
-        "@angular/compiler-cli": "7.2.15",
-        "@types/jest": "^24.0.14",
-        "@types/node": "11.10.0",
-        "@types/semver": "5.5.0",
-        "@types/yargs": "12.0.11",
-        "codelyzer": "4.5.0",
-        "jest": "^24.8.0",
-        "ng-packagr": "4.7.1",
-        "npm-run-all": "4.1.5",
-        "protractor": "5.4.2",
-        "rollup": "1.12.4",
-        "rollup-plugin-node-resolve": "4.2.4",
-        "rollup-plugin-sourcemaps": "0.4.2",
-        "semver": "5.6.0",
-        "ts-node": "8.2.0",
-        "tsickle": "0.35.0",
-        "tslib": "1.10.0",
-        "tslint": "5.16.0",
-        "tslint-sonarts": "1.9.0",
-        "typescript": "3.1.6",
-        "yargs": "13.2.4"
+    {
+      "name": "Maxim Ivanov",
+      "email": "splincodewd@yandex.ru"
     }
+  ],
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "e2e": "ng e2e",
+    "// - PROVISIONING": "Provisioning scripts",
+    "dispatch:lint": "ng lint dispatch",
+    "dispatch:test": "ng test --runInBand",
+    "dispatch:build": "ts-node ./tools/build && ts-node ./tools/copy-readme",
+    "dispatch:rollup": "rollup -c rollup.config.js",
+    "// - CI": "CI pipelines",
+    "ci:pipelines": "npm-run-all dispatch:*",
+    "// - UTILS": "Utility scripts",
+    "format": "prettier src/**/*.ts --write"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/common": "8.0.1",
+    "@angular/compiler": "8.0.1",
+    "@angular/core": "8.0.1",
+    "@angular/platform-browser": "8.0.1",
+    "@angular/platform-browser-dynamic": "8.0.1",
+    "@ngxs/store": "3.4.3",
+    "rxjs": "6.5.2",
+    "zone.js": "0.9.1"
+  },
+  "devDependencies": {
+    "@angular-builders/jest": "8.0.2",
+    "@angular-devkit/build-angular": "0.800.3",
+    "@angular-devkit/build-ng-packagr": "0.800.3",
+    "@angular/cli": "8.0.3",
+    "@angular/compiler-cli": "8.0.1",
+    "@commitlint/cli": "8.0.0",
+    "@commitlint/config-angular": "8.0.0",
+    "@types/jest": "24.0.14",
+    "@types/node": "12.0.8",
+    "codelyzer": "5.1.0",
+    "husky": "2.4.1",
+    "jest": "24.8.0",
+    "lint-staged": "8.2.1",
+    "ng-packagr": "5.3.0",
+    "npm-run-all": "4.1.5",
+    "prettier": "1.18.2",
+    "rollup": "1.15.5",
+    "rollup-plugin-node-resolve": "5.0.2",
+    "rollup-plugin-sourcemaps": "0.4.2",
+    "ts-node": "8.2.0",
+    "tsickle": "0.35.0",
+    "tslib": "1.10.0",
+    "tslint": "5.17.0",
+    "tslint-sonarts": "1.9.0",
+    "typescript": "3.4.5"
+  }
 }

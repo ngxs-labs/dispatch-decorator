@@ -1,35 +1,35 @@
 {
-    "$schema": "../node_modules/ng-packagr/package.schema.json",
-    "name": "@ngxs-labs/dispatch-decorator",
-    "version": "1.2.0",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/ngxs-labs/dispatch-decorator.git"
+  "$schema": "../node_modules/ng-packagr/package.schema.json",
+  "name": "@ngxs-labs/dispatch-decorator",
+  "version": "1.2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ngxs-labs/dispatch-decorator.git"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/ngxs-labs/dispatch-decorator#readme",
+  "bugs": {
+    "url": "https://github.com/ngxs-labs/dispatch-decorator/issues"
+  },
+  "keywords": [
+    "ngxs",
+    "redux",
+    "store"
+  ],
+  "sideEffects": true,
+  "peerDependencies": {
+    "@angular/core": ">=6.0.0 <9.0.0",
+    "@ngxs/store": ">=3.4.3",
+    "rxjs": ">=6.5.2"
+  },
+  "ngPackage": {
+    "lib": {
+      "flatModuleFile": "ngxs-labs-dispatch",
+      "entryFile": "index.ts",
+      "umdModuleIds": {
+        "@ngxs/store": "ngxs-store"
+      }
     },
-    "license": "MIT",
-    "homepage": "https://github.com/ngxs-labs/dispatch-decorator#readme",
-    "bugs": {
-        "url": "https://github.com/ngxs-labs/dispatch-decorator/issues"
-    },
-    "keywords": [
-        "ngxs",
-        "redux",
-        "store"
-    ],
-    "sideEffects": true,
-    "peerDependencies": {
-        "@angular/core": "^8.0.1",
-        "@ngxs/store": ">=3.4.3",
-        "rxjs": ">=6.5.2"
-    },
-    "ngPackage": {
-        "lib": {
-            "flatModuleFile": "ngxs-labs-dispatch",
-            "entryFile": "index.ts",
-            "umdModuleIds": {
-                "@ngxs/store": "ngxs-store"
-            }
-        },
-        "dest": "../dist/dispatch"
-    }
+    "dest": "../dist/dispatch"
+  }
 }
