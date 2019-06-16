@@ -38,6 +38,7 @@
     "// - CI": "CI pipelines",
     "ci:pipelines": "npm-run-all dispatch:*",
     "// - UTILS": "Utility scripts",
+    "bump": "ts-node ./tools/bump",
     "format": "prettier src/**/*.ts --write"
   },
   "private": true,
