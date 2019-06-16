@@ -15,8 +15,8 @@ export function Dispatch(): PropertyDecorator {
   return (target: any, key: string | symbol, descriptor?: TypedPropertyDescriptor<Function>) => {
     let originalValue: Function = null!;
 
-    function wrapped(this: any, ...args: any[]) {
-      const event: WrappedDispatchedEvent = originalValue.apply(this, args);
+    function wrapped(this: any) {
+      const event: WrappedDispatchedEvent = originalValue.apply(this, arguments);
       const zone = StaticInjector.getZone();
       const store = StaticInjector.getStore();
       const dispatchFactory = (events: DispatchedEventOrEvents) => dispatch(events, store);
