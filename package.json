@@ -58,7 +58,7 @@
     "@angular-devkit/build-angular": "0.800.3",
     "@angular-devkit/build-ng-packagr": "0.800.3",
     "@angular/cli": "8.0.3",
-    "@angular/compiler-cli": "8.0.1",
+    "@angular/compiler-cli": "8.0.2",
     "@commitlint/cli": "8.0.0",
     "@commitlint/config-angular": "8.0.0",
     "@types/colors": "1.2.1",
