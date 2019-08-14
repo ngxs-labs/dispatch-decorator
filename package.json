@@ -51,7 +51,7 @@
     "@ngxs/store": "3.4.3",
     "core-js": "3.1.4",
     "rxjs": "6.5.2",
-    "zone.js": "0.9.1"
+    "zone.js": "0.10.2"
   },
   "devDependencies": {
     "@angular-builders/jest": "8.0.4",
