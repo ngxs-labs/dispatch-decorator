@@ -1,22 +1,23 @@
-sudo: required
+sudo: false
 dist: trusty
 
 language: node_js
 node_js: '12'
 
-cache:
-  yarn: true
-  directories:
-    - node_modules
+# Since Travis is running on the Ubuntu 16+
+# this library is necessary
+# see https://github.com/cypress-io/cypress/issues/4069#issuecomment-488816887
+addons:
+  apt:
+    packages:
+      - libgconf-2-4
 
-install_dependencies: &install-dependencies
-  yarn --frozen-lockfile --non-interactive --no-progress
-
-install: *install-dependencies
+install:
+  - yarn --pure-lockfile --non-interactive
 
 script:
-  - yarn ci:pipelines
-  - cd integration/universal
-  - echo $(pwd)
-  - *install-dependencies
-  - yarn test:ssr
+  - yarn dispatch:lint
+  - yarn dispatch:build
+  - yarn test:ci
+  - yarn test:ci:integration
+  - yarn test:ci:integration:ssr

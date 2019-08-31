@@ -3,12 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "dispatch": [
-        "src"
-      ],
-      "dispatch/*": [
-        "src/*"
-      ]
+      "@ngxs-labs/dispatch-decorator": ["src/index"]
     },
     "target": "es5",
     "typeRoots": [
