@@ -1,6 +1,6 @@
 import { Store } from '@ngxs/store';
 
-import { StaticInjector } from '../internal/static-injector';
+import { getNgZone, getStore } from '../internal/static-injector';
 import { distributeEvents } from '../internal/distribute-events';
 import { flatten, composeEventsThatMayDiffer, isMethodDecorator } from '../utils/utils';
 import { WrappedDispatchedEvent, DispatchedEventOrEvents } from '../internal/internals';
@@ -16,12 +16,15 @@ export function Dispatch(): PropertyDecorator {
     let originalValue: Function = null!;
 
     function wrapped(this: any) {
-      const event: WrappedDispatchedEvent = originalValue.apply(this, arguments);
-      const zone = StaticInjector.getZone();
-      const store = StaticInjector.getStore();
-      const dispatchFactory = (events: DispatchedEventOrEvents) => dispatch(events, store);
+      function dispatchFactory(events: DispatchedEventOrEvents) {
+        return dispatch(events, store);
+      }
 
-      return zone.runOutsideAngular(() => distributeEvents(event, dispatchFactory, zone));
+      const event: WrappedDispatchedEvent = originalValue.apply(this, arguments);
+      const ngZone = getNgZone();
+      const store = getStore();
+
+      return ngZone.runOutsideAngular(() => distributeEvents(event, dispatchFactory, ngZone));
     }
 
     if (isMethodDecorator(descriptor)) {
@@ -29,7 +32,7 @@ export function Dispatch(): PropertyDecorator {
       descriptor.value = wrapped;
     } else {
       Object.defineProperty(target, key, {
-        set: (value: Function) => (originalValue = value),
+        set: value => (originalValue = value),
         get: () => wrapped
       });
     }

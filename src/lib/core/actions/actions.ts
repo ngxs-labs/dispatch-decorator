@@ -3,6 +3,6 @@
  * doesn't pass any custom action as an argument
  */
 export class DispatchAction<T = unknown> {
-  public static type: string | null = null;
+  public type!: string;
   constructor(public payload?: T) {}
 }

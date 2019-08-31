@@ -1,325 +1,250 @@
 import { TestBed } from '@angular/core/testing';
-import { Component, NgZone, Type } from '@angular/core';
-import {
-  NgxsModule,
-  State,
-  Action,
-  Store,
-  StateContext,
-  Actions,
-  ofActionSuccessful,
-  Selector
-} from '@ngxs/store';
+import { NgZone } from '@angular/core';
+import { NgxsModule, State, Action, Store, StateContext } from '@ngxs/store';
 
-import { of, Observable, interval, timer, config, Subject } from 'rxjs';
-import { delay, first, concatMapTo, map, mapTo, tap, finalize, take } from 'rxjs/operators';
+import { of, timer } from 'rxjs';
+import { delay, concatMapTo, mapTo } from 'rxjs/operators';
 
 import { NgxsDispatchPluginModule, Dispatch } from '../';
 
 describe(NgxsDispatchPluginModule.name, () => {
-  interface Todo {
-    text: string;
-    completed: boolean;
+  class Increment {
+    static readonly type = '[Counter] Increment';
   }
 
-  class AddTodo {
-    public static readonly type = '[Todos] Add todo';
-    constructor(public payload: Todo) {}
+  class Decrement {
+    static readonly type = '[Counter] Decrement';
   }
 
-  @State<Todo[]>({
-    name: 'todos',
-    defaults: []
+  @State({
+    name: 'counter',
+    defaults: 0
   })
-  class TodosState {
-    @Selector()
-    public static getTodos(state: Todo[]): Todo[] {
-      return state;
+  class CounterState {
+    @Action(Increment)
+    increment(ctx: StateContext<number>) {
+      ctx.setState(state => state + 1);
     }
 
-    @Action(AddTodo)
-    public addTodo({ setState, getState }: StateContext<Todo[]>, { payload }: AddTodo): void {
-      setState([...getState(), payload]);
+    @Action(Decrement)
+    decrement(ctx: StateContext<number>) {
+      ctx.setState(state => state - 1);
     }
   }
-
-  const configureTestingModule = <T>(component: Type<T>) => {
-    TestBed.configureTestingModule({
-      imports: [NgxsModule.forRoot([TodosState]), NgxsDispatchPluginModule.forRoot()],
-      declarations: [component]
-    });
-
-    const store: Store = TestBed.get<Store>(Store);
-    const actions$: Actions = TestBed.get<Actions>(Actions);
-    const fixture = TestBed.createComponent(component);
-
-    return { store, actions$, fixture };
-  };
 
   it('should be possible to dispatch events using @Dispatch() decorator', () => {
-    @Component({ template: '' })
-    class MockComponent {
-      @Dispatch()
-      public addTodo = () =>
-        new AddTodo({
-          text: 'Buy some coffee',
-          completed: false
-        });
+    // Arrange
+    class CounterFacade {
+      @Dispatch() increment = () => new Increment();
     }
 
-    const { store, fixture } = configureTestingModule(MockComponent);
+    // Act
+    TestBed.configureTestingModule({
+      imports: [NgxsModule.forRoot([CounterState]), NgxsDispatchPluginModule.forRoot()]
+    });
 
-    fixture.componentInstance.addTodo();
+    const facade = new CounterFacade();
+    const store: Store = TestBed.get(Store);
 
-    const { length } = store.selectSnapshot(TodosState.getTodos);
-    expect(length).toBe(1);
-  });
+    facade.increment();
 
-  it('should throw if the return type is not an object or doesn`t have `type` property', () => {
-    @Component({ template: '' })
-    class MockComponent {
-      @Dispatch()
-      public addTodo = () => ({});
-    }
-
-    const { fixture } = configureTestingModule(MockComponent);
-
-    try {
-      fixture.componentInstance.addTodo();
-    } catch ({ message }) {
-      expect(message.indexOf('seems to return an invalid object')).toBeGreaterThan(-1);
-    }
+    const counter: number = store.selectSnapshot(CounterState);
+    // Assert
+    expect(counter).toBe(1);
   });
 
   it('should be possible to dispatch plain objects using @Dispatch() decorator', () => {
-    @Component({ template: '' })
-    class MockComponent {
-      @Dispatch()
-      public addTodo = () => ({
-        type: '[Todos] Add todo',
-        payload: {
-          text: 'Buy some coffee',
-          completed: false
-        }
+    // Arrange
+    class CounterFacade {
+      @Dispatch() increment = () => ({
+        type: '[Counter] Increment'
       });
     }
 
-    const { store, fixture } = configureTestingModule(MockComponent);
+    // Act
+    TestBed.configureTestingModule({
+      imports: [NgxsModule.forRoot([CounterState]), NgxsDispatchPluginModule.forRoot()]
+    });
 
-    fixture.componentInstance.addTodo();
+    const facade = new CounterFacade();
+    const store: Store = TestBed.get(Store);
 
-    const { length } = store.selectSnapshot(TodosState.getTodos);
-    expect(length).toBe(1);
+    facade.increment();
+
+    const counter: number = store.selectSnapshot(CounterState);
+    // Assert
+    expect(counter).toBe(1);
   });
 
-  it('should dispatch if method returns a `Promise`', () => {
-    @Component({ template: '' })
-    class MockComponent {
-      @Dispatch()
-      public addTodo = async () =>
-        new AddTodo({
-          text: 'Buy some coffee',
-          completed: false
-        });
+  it('should dispatch if method returns a `Promise`', async () => {
+    // Arrange
+    class CounterFacade {
+      @Dispatch() incrementAsync = () => Promise.resolve(new Increment());
     }
 
-    const { store, actions$, fixture } = configureTestingModule(MockComponent);
+    // Act
+    TestBed.configureTestingModule({
+      imports: [NgxsModule.forRoot([CounterState]), NgxsDispatchPluginModule.forRoot()]
+    });
 
-    actions$
-      .pipe(
-        ofActionSuccessful(AddTodo),
-        map(() => store.selectSnapshot(TodosState.getTodos)),
-        first()
-      )
-      .subscribe((todos) => {
-        expect(todos).toEqual([{ text: 'Buy some coffee', completed: false }]);
-      });
+    const facade = new CounterFacade();
+    const store: Store = TestBed.get(Store);
 
-    fixture.componentInstance.addTodo();
+    await facade.incrementAsync();
+
+    const counter: number = store.selectSnapshot(CounterState);
+    // Assert
+    expect(counter).toBe(1);
   });
 
-  it('should dispatch if method returns an `Observable`', (done: jest.DoneCallback) => {
-    @Component({ template: '' })
-    class MockComponent {
-      @Dispatch()
-      public addTodo = () =>
-        of(
-          new AddTodo({
-            text: 'Buy some coffee',
-            completed: false
-          })
-        ).pipe(delay(1000));
+  it('should dispatch if method returns an `Observable`', async () => {
+    // Arrange
+    class CounterFacade {
+      @Dispatch() incrementAsync = () => of(new Increment()).pipe(delay(1000));
     }
 
-    const { store, actions$, fixture } = configureTestingModule(MockComponent);
+    // Act
+    TestBed.configureTestingModule({
+      imports: [NgxsModule.forRoot([CounterState]), NgxsDispatchPluginModule.forRoot()]
+    });
 
-    actions$
-      .pipe(
-        ofActionSuccessful(AddTodo),
-        map(() => store.selectSnapshot(TodosState.getTodos))
-      )
-      .subscribe(({ length }) => {
-        expect(length).toBe(1);
-        done();
-      });
+    const facade = new CounterFacade();
+    const store: Store = TestBed.get(Store);
 
-    fixture.componentInstance.addTodo();
+    await facade.incrementAsync().toPromise();
+
+    const counter: number = store.selectSnapshot(CounterState);
+    // Assert
+    expect(counter).toBe(1);
   });
 
-  it('events should be handled outside zone but dispatched inside', (done: jest.DoneCallback) => {
-    function asyncTimeout(timeout: number): Promise<void> {
-      return new Promise((resolve) => {
-        setTimeout(resolve, timeout);
-      });
+  it('events should be handled outside of Angular zone but dispatched within', async () => {
+    // Arrange
+    function delay(timeout: number): Promise<void> {
+      return new Promise(resolve => setTimeout(resolve, timeout));
     }
 
-    @Component({ template: '' })
-    class MockComponent {
-      @Dispatch()
-      public addTodo = async () => {
-        await asyncTimeout(200);
-
+    class CounterFacade {
+      @Dispatch() incrementAsync = async () => {
+        await delay(200);
         expect(NgZone.isInAngularZone()).toBeFalsy();
-
-        await asyncTimeout(200);
-
-        return new AddTodo({
-          text: 'Buy some coffee',
-          completed: false
-        });
+        await delay(200);
+        return new Increment();
       };
     }
 
-    const { actions$, fixture } = configureTestingModule(MockComponent);
+    // Act
+    TestBed.configureTestingModule({
+      imports: [NgxsModule.forRoot([CounterState]), NgxsDispatchPluginModule.forRoot()]
+    });
 
-    actions$
-      .pipe(
-        ofActionSuccessful(AddTodo),
-        first()
-      )
-      .subscribe(() => {
-        done();
-      });
+    const facade = new CounterFacade();
+    const store: Store = TestBed.get(Store);
 
-    fixture.componentInstance.addTodo();
+    await facade.incrementAsync();
+
+    const counter: number = store.selectSnapshot(CounterState);
+    // Assert
+    expect(counter).toBe(1);
   });
 
-  it('should be possible to dispatch an array of events', (done: jest.DoneCallback) => {
-    @Component({ template: '' })
-    class MockComponent {
-      @Dispatch()
-      public addTodos = () => {
-        const event = new AddTodo({
-          text: 'Buy some coffee',
-          completed: false
-        });
-
-        return [event, event];
-      };
+  it('should be possible to dispatch an array of events', () => {
+    // Arrange
+    class CounterFacade {
+      @Dispatch() increment = () => [new Increment(), new Increment()];
     }
 
-    const { store, actions$, fixture } = configureTestingModule(MockComponent);
+    // Act
+    TestBed.configureTestingModule({
+      imports: [NgxsModule.forRoot([CounterState]), NgxsDispatchPluginModule.forRoot()]
+    });
 
-    actions$
-      .pipe(
-        ofActionSuccessful(AddTodo),
-        map(() => store.selectSnapshot(TodosState.getTodos)),
-        first(({ length }) => length === 2)
-      )
-      .subscribe((todos) => {
-        expect(todos).toEqual([
-          { text: 'Buy some coffee', completed: false },
-          { text: 'Buy some coffee', completed: false }
-        ]);
+    const facade = new CounterFacade();
+    const store: Store = TestBed.get(Store);
 
-        done();
-      });
+    facade.increment();
 
-    fixture.componentInstance.addTodos();
+    const counter: number = store.selectSnapshot(CounterState);
+    // Assert
+    expect(counter).toBe(2);
   });
 
-  it('should be possible to use queue of events', (done: jest.DoneCallback) => {
-    @Component({ template: '' })
-    class MockComponent {
-      @Dispatch()
-      public addTodos(): Observable<AddTodo> {
-        return of(null).pipe(
-          concatMapTo([
-            new AddTodo({
-              text: 'Buy some coffee',
-              completed: false
-            }),
-
-            new AddTodo({
-              text: 'Buy some tea',
-              completed: false
-            })
-          ])
-        );
-      }
+  it('should be possible to use queue of events', () => {
+    // Arrange
+    class CounterFacade {
+      @Dispatch() increment = () => of(null).pipe(concatMapTo([new Increment(), new Increment()]));
     }
 
-    const { store, actions$, fixture } = configureTestingModule(MockComponent);
+    // Act
+    TestBed.configureTestingModule({
+      imports: [NgxsModule.forRoot([CounterState]), NgxsDispatchPluginModule.forRoot()]
+    });
 
-    actions$
-      .pipe(
-        ofActionSuccessful(AddTodo),
-        map(() => store.selectSnapshot(TodosState.getTodos)),
-        first(({ length }) => length === 2)
-      )
-      .subscribe((todos) => {
-        expect(todos).toEqual([
-          { text: 'Buy some coffee', completed: false },
-          { text: 'Buy some tea', completed: false }
-        ]);
+    const facade = new CounterFacade();
+    const store: Store = TestBed.get(Store);
 
-        done();
-      });
+    facade.increment();
 
-    fixture.componentInstance.addTodos();
+    const counter: number = store.selectSnapshot(CounterState);
+    // Assert
+    expect(counter).toBe(2);
   });
 
-  it('should be possible to access instance properties', (done: jest.DoneCallback) => {
-    class MockBaseClass {
-      private action = new AddTodo({
-        text: 'Buy some coffee',
-        completed: false
-      });
+  it('should be possible to access instance properties', () => {
+    // Arrange
+    abstract class BaseCounterFacade {
+      private action = new Increment();
 
       protected getAction() {
         return this.action;
       }
     }
 
-    @Component({ template: '' })
-    class MockComponent extends MockBaseClass {
-      @Dispatch()
-      public addTodo() {
+    class CounterFacade extends BaseCounterFacade {
+      @Dispatch() increment() {
         return this.getAction();
       }
 
-      @Dispatch()
-      public addTodoLambda = () => this.getAction();
+      @Dispatch() incrementLambda = () => this.getAction();
     }
 
-    const { store, actions$, fixture } = configureTestingModule(MockComponent);
+    // Act
+    TestBed.configureTestingModule({
+      imports: [NgxsModule.forRoot([CounterState]), NgxsDispatchPluginModule.forRoot()]
+    });
 
-    actions$
-      .pipe(
-        ofActionSuccessful(AddTodo),
-        map(() => store.selectSnapshot(TodosState.getTodos)),
-        first(({ length }) => length === 2)
-      )
-      .subscribe((todos) => {
-        expect(todos).toEqual([
-          { text: 'Buy some coffee', completed: false },
-          { text: 'Buy some coffee', completed: false }
-        ]);
+    const facade = new CounterFacade();
+    const store: Store = TestBed.get(Store);
 
-        done();
-      });
+    facade.increment();
+    facade.incrementLambda();
 
-    fixture.componentInstance.addTodo();
-    fixture.componentInstance.addTodoLambda();
+    const counter: number = store.selectSnapshot(CounterState);
+    // Assert
+    expect(counter).toBe(2);
+  });
+
+  it('should not dispatch multiple times if subscribed underneath and directly', async () => {
+    // Arrange
+    class CounterFacade {
+      @Dispatch() incrementAsync = () => timer(0).pipe(mapTo(new Increment()));
+      @Dispatch() decrementAsync = () => timer(0).pipe(mapTo(new Decrement()));
+    }
+
+    // Act
+    TestBed.configureTestingModule({
+      imports: [NgxsModule.forRoot([CounterState]), NgxsDispatchPluginModule.forRoot()]
+    });
+
+    const facade = new CounterFacade();
+    const store: Store = TestBed.get(Store);
+
+    // `toPromise` causes to `subscribe` under the hood
+    await facade.incrementAsync().toPromise();
+    await facade.decrementAsync().toPromise();
+
+    const counter = store.selectSnapshot(CounterState);
+    // Assert
+    expect(counter).toBe(0);
   });
 });

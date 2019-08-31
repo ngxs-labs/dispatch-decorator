@@ -1,4 +1,4 @@
-import { Injectable, Injector, NgZone } from '@angular/core';
+import { Injector, NgZone } from '@angular/core';
 import { Store } from '@ngxs/store';
 
 class NgxsDispatchPluginModuleNotImported extends Error {
@@ -7,27 +7,24 @@ class NgxsDispatchPluginModuleNotImported extends Error {
   }
 }
 
-@Injectable()
-export class StaticInjector {
-  private static injector: Injector | null = null;
+let injector: Injector | null = null;
 
-  constructor(injector: Injector) {
-    StaticInjector.injector = injector;
+function assertDefined<T>(actual: T | null | undefined): never | void {
+  if (actual == null) {
+    throw new NgxsDispatchPluginModuleNotImported();
   }
+}
 
-  public static getStore(): never | Store {
-    if (this.injector === null) {
-      throw new NgxsDispatchPluginModuleNotImported();
-    }
+export function setInjector(parentInjector: Injector): void {
+  injector = parentInjector;
+}
 
-    return this.injector.get<Store>(Store);
-  }
+export function getStore(): never | Store {
+  assertDefined(injector);
+  return injector!.get<Store>(Store);
+}
 
-  public static getZone(): never | NgZone {
-    if (this.injector === null) {
-      throw new NgxsDispatchPluginModuleNotImported();
-    }
-
-    return this.injector.get<NgZone>(NgZone);
-  }
+export function getNgZone(): never | NgZone {
+  assertDefined(injector);
+  return injector!.get<NgZone>(NgZone);
 }
