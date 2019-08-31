@@ -26,18 +26,3 @@ export type ActionOrActions = Action | Action[];
  * ```
  */
 export type Wrapped = StreamLike<ActionOrActions> | ActionOrActions;
-
-export interface DispatchOptions {
-  cancelableBy?: ActionType | ActionType[];
-}
-
-interface ActionDef<T = unknown, U = unknown> {
-  type: string;
-  new (...args: T[]): U;
-}
-
-type ActionType =
-  | ActionDef
-  | {
-      type: string;
-    };

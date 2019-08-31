@@ -247,28 +247,4 @@ describe(NgxsDispatchPluginModule.name, () => {
     // Assert
     expect(counter).toBe(0);
   });
-
-  it('should cancel previous async actions', async () => {
-    // Arrange
-    class CounterFacade {
-      @Dispatch({ cancelableBy: Increment }) increment = () =>
-        timer(500).pipe(mapTo(new Increment()));
-    }
-
-    // Act
-    TestBed.configureTestingModule({
-      imports: [NgxsModule.forRoot([CounterState]), NgxsDispatchPluginModule.forRoot()]
-    });
-
-    const facade = new CounterFacade();
-    const store: Store = TestBed.get(Store);
-
-    facade.increment();
-    facade.increment();
-    await facade.increment().toPromise();
-
-    const counter = store.selectSnapshot(CounterState);
-    // Assert
-    expect(counter).toBe(1);
-  });
 });

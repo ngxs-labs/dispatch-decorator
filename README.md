@@ -41,19 +41,19 @@ import { NgxsDispatchPluginModule } from '@ngxs-labs/dispatch-decorator';
 export class AppModule {}
 ```
 
-## Dispatch
+### Dispatch Decorator
 
-`@Dispatch()` is a function that allows you to decorate methods and properties of your components, basically arrow functions are properties. Firstly you have to create a state:
+`@Dispatch()` is a function that allows you to decorate methods and properties of your classes. Firstly you have to create a state:
 
 ```typescript
 import { State, Action, StateContext } from '@ngxs/store';
 
 export class Increment {
-  public static readonly type = '[Counter] Increment';
+  static readonly type = '[Counter] Increment';
 }
 
 export class Decrement {
-  public static readonly type = '[Counter] Decrement';
+  static readonly type = '[Counter] Decrement';
 }
 
 @State<number>({
@@ -62,18 +62,18 @@ export class Decrement {
 })
 export class CounterState {
   @Action(Increment)
-  public increment({ setState, getState }: StateContext<number>) {
-    setState(getState() + 1);
+  increment(ctx: StateContext<number>) {
+    ctx.setState(ctx.getState() + 1);
   }
 
   @Action(Decrement)
-  public decrement({ setState, getState }: StateContext<number>) {
-    setState(getState() - 1);
+  decrement(ctx: StateContext<number>) {
+    ctx.setState(ctx.getState() - 1);
   }
 }
 ```
 
-Register this state in `NgxsModule` and import this state and actions in your component:
+Register this state in `NgxsModule` and import this state and actions into your component:
 
 ```typescript
 import { Component } from '@angular/core';
@@ -96,18 +96,15 @@ import { CounterState, Increment, Decrement } from './counter.state';
   `
 })
 export class AppComponent {
-  @Select(CounterState)
-  public counter$: Observable<number>;
+  @Select(CounterState) counter$: Observable<number>;
 
-  @Dispatch()
-  public increment = () => new Increment();
+  @Dispatch() increment = () => new Increment();
 
-  @Dispatch()
-  public decrement = () => new Decrement();
+  @Dispatch() decrement = () => new Decrement();
 }
 ```
 
-Also, your dispatchers can be asyncrhonous, they can return `Promise` or `Observable`, asynchronous operations are handled outside Angular's zone, thus it doesn't affect performance:
+Dispatchers can be also asynchronous. They can return either `Promise` or `Observable. Asynchronous operations are handled outside Angular's zone, thus it doesn't affect performance:
 
 ```typescript
 export class AppComponent {
@@ -115,34 +112,33 @@ export class AppComponent {
   constructor(private api: ApiService) {}
 
   @Dispatch()
-  public async setAppSchema(): Promise<SetAppSchema> {
-    const { version, shouldUseGraphQL } = await this.api.getInformation();
-    const { schema } = await this.api.getSchemaForVersion(version);
+  async setAppSchema() {
+    const version = await this.api.getApiVersion();
+    const schema = await this.api.getSchemaForVersion(version);
     return new SetAppSchema(schema);
   }
 
   // OR using lambda
 
-  @Dispatch()
-  public setAppInformation = () =>
-    this.api.getInformation().pipe(
-      switchMap(({ version }) => this.api.getSchemaForVersion(version)),
-      map(({ schema }) => new SetAppSchema(schema))
+  @Dispatch() setAppSchema = () =>
+    this.api.getApiVersion().pipe(
+      mergeMap(version => this.api.getSchemaForVersion(version)),
+      map(schema => new SetAppSchema(schema))
     );
 }
 ```
 
 Notice that it doesn't matter if you use an arrow function or a normal class method.
 
-## Dispatching multiple events
+### Dispatching Multiple Actions
 
-Your dispatchers can also return arrays with events inside:
+Dispatchers can return arrays. Actions will be handled synchronously one by one if their action handlers do synchronous job and vice versa if their handlers are asynchronous:
 
 ```typescript
 export class AppComponent {
-  @Dispatch()
-  public setLanguageAndNavigateHome = (language: string) => {
-    return [new SetLanguage(language), new Navigate('/')];
-  };
+  @Dispatch() setLanguageAndNavigateHome = (language: string) => [
+    new SetLanguage(language),
+    new Navigate('/')
+  ];
 }
 ```

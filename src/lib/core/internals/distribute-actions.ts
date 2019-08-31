@@ -1,20 +1,12 @@
 import { NgZone, ɵisPromise as isPromise } from '@angular/core';
-import { ofActionDispatched, Actions } from '@ngxs/store';
 import { isObservable, Observable } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
-import { Wrapped, ActionOrActions, DispatchFactory, DispatchOptions } from './internals';
+import { Wrapped, ActionOrActions, DispatchFactory } from './internals';
 
 function unwrapObservable(
   wrapped$: Observable<ActionOrActions>,
-  dispatchWithinTheAngularZoneFactory: DispatchFactory,
-  actions$: Actions,
-  options: DispatchOptions
+  dispatchWithinTheAngularZoneFactory: DispatchFactory
 ): Observable<ActionOrActions> {
-  if (options.cancelableBy) {
-    wrapped$ = wrapped$.pipe(takeUntil(actions$.pipe(ofActionDispatched(options.cancelableBy))));
-  }
-
   wrapped$.subscribe({
     next: actionOrActions => dispatchWithinTheAngularZoneFactory(actionOrActions)
   });
@@ -34,16 +26,14 @@ async function unwrapPromise(
 export function distributeActions(
   wrapped: Wrapped,
   dispatchFactory: DispatchFactory,
-  zone: NgZone,
-  actions$: Actions,
-  options: DispatchOptions
+  zone: NgZone
 ) {
   function dispatchWithinTheAngularZoneFactory(actionOrActions: ActionOrActions) {
     zone.run(() => dispatchFactory(actionOrActions));
   }
 
   if (isObservable(wrapped)) {
-    return unwrapObservable(wrapped, dispatchWithinTheAngularZoneFactory, actions$, options);
+    return unwrapObservable(wrapped, dispatchWithinTheAngularZoneFactory);
   }
 
   if (isPromise(wrapped)) {
