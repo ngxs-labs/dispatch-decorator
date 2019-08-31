@@ -1,6 +1,6 @@
 import { NgModule, ModuleWithProviders, Injector } from '@angular/core';
 
-import { setInjector } from './core/internal/static-injector';
+import { setInjector } from './core/internals/static-injector';
 
 @NgModule()
 export class NgxsDispatchPluginModule {

@@ -3,8 +3,8 @@ import { Select } from '@ngxs/store';
 
 import { Observable } from 'rxjs';
 
-import { CounterState, CounterStateModel } from './counter.state';
 import { CounterFacade } from './counter.facade';
+import { CounterState, CounterStateModel } from './counter.state';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +18,10 @@ export class AppComponent {
 
   increment(): void {
     this.counterFacade.increment();
+  }
+
+  incrementAsync(): void {
+    this.counterFacade.incrementAsync();
   }
 
   decrement(): void {
