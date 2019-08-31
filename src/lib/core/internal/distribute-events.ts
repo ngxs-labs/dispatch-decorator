@@ -1,46 +1,45 @@
-import { NgZone } from '@angular/core';
-
+import { NgZone, ɵisPromise as isPromise } from '@angular/core';
 import { isObservable, Observable } from 'rxjs';
 
-import { isPromise } from '../utils/utils';
 import { WrappedDispatchedEvent, DispatchedEventOrEvents, DispatchFactory } from './internals';
 
 function unwrapObservable(
-  events$: Observable<DispatchedEventOrEvents>,
-  zonedDispatchFactory: DispatchFactory
+  result: Observable<DispatchedEventOrEvents>,
+  dispatchWithinTheAngularZoneFactory: DispatchFactory
 ): Observable<DispatchedEventOrEvents> {
-  events$.subscribe((events) => {
-    zonedDispatchFactory(events);
+  result.subscribe({
+    next: events => dispatchWithinTheAngularZoneFactory(events)
   });
 
-  return events$;
+  return result;
 }
 
 async function unwrapPromise(
-  promisedEvents: Promise<DispatchedEventOrEvents>,
-  zonedDispatchFactory: DispatchFactory
+  result: Promise<DispatchedEventOrEvents>,
+  dispatchWithinTheAngularZoneFactory: DispatchFactory
 ): Promise<DispatchedEventOrEvents> {
-  const events = await promisedEvents;
-  zonedDispatchFactory(events);
+  const events = await result;
+  dispatchWithinTheAngularZoneFactory(events);
   return events;
 }
 
 export function distributeEvents(
-  event: WrappedDispatchedEvent,
+  result: WrappedDispatchedEvent,
   dispatchFactory: DispatchFactory,
   zone: NgZone
 ) {
-  const zonedDispatchFactory = (events: DispatchedEventOrEvents) => {
+  function dispatchWithinTheAngularZoneFactory(events: DispatchedEventOrEvents) {
     zone.run(() => dispatchFactory(events));
-  };
-
-  if (isObservable(event)) {
-    return unwrapObservable(event, zonedDispatchFactory);
   }
 
-  if (isPromise(event)) {
-    return unwrapPromise(event, zonedDispatchFactory);
+  if (isObservable(result)) {
+    return unwrapObservable(result, dispatchWithinTheAngularZoneFactory);
   }
 
-  return zonedDispatchFactory(event);
+  if (isPromise(result)) {
+    return unwrapPromise(result, dispatchWithinTheAngularZoneFactory);
+  }
+
+  dispatchWithinTheAngularZoneFactory(result);
+  return result;
 }

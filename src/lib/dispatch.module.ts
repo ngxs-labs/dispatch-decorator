@@ -1,15 +1,16 @@
-import { NgModule, ModuleWithProviders, Self } from '@angular/core';
+import { NgModule, ModuleWithProviders, Injector } from '@angular/core';
 
-import { StaticInjector } from './core/internal/static-injector';
+import { setInjector } from './core/internal/static-injector';
 
 @NgModule()
 export class NgxsDispatchPluginModule {
-  constructor(@Self() private staticInjector: StaticInjector) {}
+  constructor(injector: Injector) {
+    setInjector(injector);
+  }
 
-  public static forRoot(): ModuleWithProviders<NgxsDispatchPluginModule> {
+  static forRoot(): ModuleWithProviders<NgxsDispatchPluginModule> {
     return {
-      ngModule: NgxsDispatchPluginModule,
-      providers: [StaticInjector]
+      ngModule: NgxsDispatchPluginModule
     };
   }
 }
