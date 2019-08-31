@@ -4,15 +4,17 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgxsModule } from '@ngxs/store';
 import { NgxsDispatchPluginModule } from '@ngxs-labs/dispatch-decorator';
 
-import { CounterState } from './store';
+import { CounterState } from './counter.state';
 
 import { AppComponent } from './app.component';
 
+import { environment } from '../environments/environment';
+
 @NgModule({
   imports: [
-    BrowserModule.withServerTransition({ appId: 'universal-dispatch-decorator' }),
+    BrowserModule.withServerTransition({ appId: 'dispatch-decorator' }),
     HttpClientModule,
-    NgxsModule.forRoot([CounterState]),
+    NgxsModule.forRoot([CounterState], { developmentMode: !environment.production }),
     NgxsDispatchPluginModule.forRoot()
   ],
   declarations: [AppComponent],

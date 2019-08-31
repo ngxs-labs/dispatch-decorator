@@ -1,0 +1,7 @@
+<ng-container *ngIf="counter$ | async as state">
+  <pre class="counter-state">Counter state is {{ state | json }}</pre>
+  <h1 class="counter">Counter is {{ state.counter }}</h1>
+</ng-container>
+
+<button class="increment" (click)="increment()">Increment via facade</button>
+<button class="decrement" (click)="decrement()">Decrement via facade</button>
