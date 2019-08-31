@@ -1,30 +1,30 @@
 import { Store } from '@ngxs/store';
 
-import { getNgZone, getStore } from '../internal/static-injector';
-import { distributeEvents } from '../internal/distribute-events';
-import { flatten, composeEventsThatMayDiffer, isMethodDecorator } from '../utils/utils';
-import { WrappedDispatchedEvent, DispatchedEventOrEvents } from '../internal/internals';
+import { distributeActions } from '../internals/distribute-actions';
+import { getNgZone, getStore, getActions$ } from '../internals/static-injector';
+import { flatten, renovateNgxsActions, isMethodDecorator } from '../utils/utils';
+import { Wrapped, ActionOrActions, Action, DispatchOptions } from '../internals/internals';
 
-function dispatch(events: DispatchedEventOrEvents, store: Store): void {
-  const flattened = flatten(events);
-  const composed = composeEventsThatMayDiffer(flattened);
-  store.dispatch(composed);
+function dispatch(actionOrActions: ActionOrActions, store: Store): void {
+  const actions: Action[] = flatten(actionOrActions);
+  const renovated = renovateNgxsActions(actions);
+  store.dispatch(renovated);
 }
 
-export function Dispatch(): PropertyDecorator {
+export function Dispatch(options: DispatchOptions = {}): PropertyDecorator {
   return (target: any, key: string | symbol, descriptor?: TypedPropertyDescriptor<Function>) => {
     let originalValue: Function = null!;
 
     function wrapped(this: any) {
-      function dispatchFactory(events: DispatchedEventOrEvents) {
-        return dispatch(events, store);
-      }
-
-      const event: WrappedDispatchedEvent = originalValue.apply(this, arguments);
-      const ngZone = getNgZone();
+      const wrapped: Wrapped = originalValue.apply(this, arguments);
       const store = getStore();
-
-      return ngZone.runOutsideAngular(() => distributeEvents(event, dispatchFactory, ngZone));
+      const ngZone = getNgZone();
+      const actions$ = getActions$();
+      const dispatchFactory = (actionOrActions: ActionOrActions) =>
+        dispatch(actionOrActions, store);
+      return ngZone.runOutsideAngular(() =>
+        distributeActions(wrapped, dispatchFactory, ngZone, actions$, options)
+      );
     }
 
     if (isMethodDecorator(descriptor)) {

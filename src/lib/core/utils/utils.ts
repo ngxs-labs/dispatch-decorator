@@ -1,5 +1,5 @@
 import { DispatchAction } from '../actions/actions';
-import { ObjectLiteralAction, DispatchedEvent } from '../internal/internals';
+import { ObjectLiteralAction, Action } from '../internals/internals';
 
 export function isMethodDecorator(
   descriptor?: any
@@ -7,27 +7,27 @@ export function isMethodDecorator(
   return descriptor && typeof descriptor.value === 'function';
 }
 
-function eventIsPlainObject(event: any): event is ObjectLiteralAction {
-  return event.constructor === Object;
+function isPlainObject(target: any): target is ObjectLiteralAction {
+  return target !== null && typeof target === 'object' && target.constructor === Object;
 }
 
-export function composeEventsThatMayDiffer(events: DispatchedEvent[]): DispatchedEvent[] {
-  const length = events.length;
-  const composed = new Array(length);
+export function renovateNgxsActions(actions: Action[]): Action[] {
+  const length = actions.length;
+  const renovated = new Array<Action>(length);
 
   for (let i = 0; i < length; i++) {
-    const event = events[i];
+    const action = actions[i];
 
-    if (eventIsPlainObject(event)) {
-      const action = new DispatchAction(event.payload);
-      action.type = event.type;
-      composed[i] = action;
+    if (isPlainObject(action)) {
+      const dispatchAction = new DispatchAction(action.payload);
+      dispatchAction.type = action.type;
+      renovated[i] = dispatchAction;
     } else {
-      composed[i] = event;
+      renovated[i] = action;
     }
   }
 
-  return composed;
+  return renovated;
 }
 
 export function flatten<T>(value: T | T[]): T[] {
