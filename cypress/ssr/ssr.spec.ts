@@ -28,16 +28,4 @@ describe('Server side rendering', () => {
       .get('h1.counter')
       .should('contain', 'Counter is 2');
   });
-
-  it('should increment asynchronously but cancel previous actions', () => {
-    // Arrange & act & assert
-    cy.visit(indexUrl)
-      .get('button.increment-async')
-      .click()
-      .click()
-      .click()
-      .wait(600)
-      .get('h1.counter')
-      .should('contain', 'Counter is 1');
-  });
 });

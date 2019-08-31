@@ -20,10 +20,6 @@ export class AppComponent {
     this.counterFacade.increment();
   }
 
-  incrementAsync(): void {
-    this.counterFacade.incrementAsync();
-  }
-
   decrement(): void {
     this.counterFacade.decrement();
   }
