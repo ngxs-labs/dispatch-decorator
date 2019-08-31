@@ -142,3 +142,7 @@ export class AppComponent {
   ];
 }
 ```
+
+### Business Logic Decomposition with Facades
+
+[There is a great article](https://medium.com/ngxs/ngxs-facade-3aa90c41497b) about using facades and the `@Dispatch` decorator together to mask interaction with more complex components behind the scenes.
