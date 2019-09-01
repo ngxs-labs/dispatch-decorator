@@ -1,10 +1,10 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/ngxs-labs/dispatch-decorator/master/docs/assets/logo.png">
+  <img src="https://raw.githubusercontent.com/ngxs-labs/emitter/master/docs/assets/logo.png">
 </p>
 
 ---
 
-> Reusable logic for avoiding `Store` injection
+> Distribution for separation of concern between the state management and the view
 
 [![Build Status](https://travis-ci.org/ngxs-labs/dispatch-decorator.svg?branch=master)](https://travis-ci.org/ngxs-labs/dispatch-decorator)
 [![NPM](https://badge.fury.io/js/%40ngxs-labs%2Fdispatch-decorator.svg)](https://www.npmjs.com/package/@ngxs-labs/dispatch-decorator)
@@ -18,8 +18,6 @@ This package simplifies dispatching process, you shouldn't care about `Store` se
 To install `@ngxs-labs/dispatch-decorator` run the following command:
 
 ```console
-npm install @ngxs-labs/dispatch-decorator
-# or if you use yarn
 yarn add @ngxs-labs/dispatch-decorator
 ```
 
@@ -43,7 +41,7 @@ export class AppModule {}
 
 ### Dispatch Decorator
 
-`@Dispatch()` is a function that allows you to decorate methods and properties of your classes. Firstly you have to create a state:
+`@Dispatch()` is a function that allows you to decorate methods and properties of your classes. Firstly let's create our state for demonstrating purposes:
 
 ```typescript
 import { State, Action, StateContext } from '@ngxs/store';
@@ -73,7 +71,7 @@ export class CounterState {
 }
 ```
 
-Register this state in `NgxsModule` and import this state and actions into your component:
+After registering our state in the `NgxsModule` we are ready to try the plugin out. Given the following component:
 
 ```typescript
 import { Component } from '@angular/core';
@@ -104,7 +102,9 @@ export class AppComponent {
 }
 ```
 
-Dispatchers can be also asynchronous. They can return either `Promise` or `Observable. Asynchronous operations are handled outside Angular's zone, thus it doesn't affect performance:
+As you may mention we don't have to inject the `Store` class to dispatch those actions. The `@Dispatch` decorator does it for you underneath. It gets the result of the function call and invokes `store.dispatch(...)` under the hood.
+
+Dispatchers can be also asynchronous. They can return either `Promise` or `Observable`. Asynchronous operations are handled outside of Angular's zone, thus it doesn't affect performance:
 
 ```typescript
 export class AppComponent {

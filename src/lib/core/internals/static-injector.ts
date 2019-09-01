@@ -1,10 +1,8 @@
 import { Injector, NgZone } from '@angular/core';
-import { Store, Actions } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 
 class NgxsDispatchPluginModuleNotImported extends Error {
-  constructor() {
-    super('"NgxsDispatchPluginModule" is not imported.');
-  }
+  message = 'NgxsDispatchPluginModule is not imported';
 }
 
 let injector: Injector | null = null;
@@ -27,9 +25,4 @@ export function getStore(): never | Store {
 export function getNgZone(): never | NgZone {
   assertDefined(injector);
   return injector!.get<NgZone>(NgZone);
-}
-
-export function getActions$(): never | Actions {
-  assertDefined(injector);
-  return injector!.get<Actions>(Actions);
 }

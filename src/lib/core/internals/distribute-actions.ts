@@ -3,31 +3,34 @@ import { isObservable, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { ActionCompleter } from './action-completer';
-import { Wrapped, ActionOrActions, DispatchFactory } from './internals';
+import { Wrapped, ActionOrActions } from './internals';
+import { getStore, getNgZone } from './static-injector';
 
-function unwrapObservable(
-  wrapped$: Observable<ActionOrActions>,
-  actionCompleter: ActionCompleter | null,
-  dispatchWithinTheAngularZoneFactory: DispatchFactory
-): Observable<ActionOrActions> {
-  // If it is not nully then it means `cancelUncompleted` is truthy
-  if (actionCompleter) {
-    wrapped$ = wrapped$.pipe(takeUntil(actionCompleter.cancelUncompleted$));
-  }
-
-  wrapped$.subscribe({
-    next: actionOrActions => dispatchWithinTheAngularZoneFactory(actionOrActions)
-  });
-
-  return wrapped$;
+function dispatchFactory(actionOrActions: ActionOrActions): void {
+  const store = getStore();
+  const ngZone = getNgZone();
+  ngZone.run(() => store.dispatch(actionOrActions));
 }
 
-async function unwrapPromise(
-  wrapped: Promise<ActionOrActions>,
-  dispatchWithinTheAngularZoneFactory: DispatchFactory
-): Promise<ActionOrActions> {
+function unwrapObservable(
+  wrapped: Observable<ActionOrActions>,
+  actionCompleter: ActionCompleter | null
+): Observable<ActionOrActions> {
+  // If it is not nully then it means `cancelUncompleted` is truthy
+  if (actionCompleter !== null) {
+    wrapped = wrapped.pipe(takeUntil(actionCompleter.cancelUncompleted$));
+  }
+
+  wrapped.subscribe({
+    next: actionOrActions => dispatchFactory(actionOrActions)
+  });
+
+  return wrapped;
+}
+
+async function unwrapPromise(wrapped: Promise<ActionOrActions>): Promise<ActionOrActions> {
   const actionOrActions = await wrapped;
-  dispatchWithinTheAngularZoneFactory(actionOrActions);
+  dispatchFactory(actionOrActions);
   return actionOrActions;
 }
 
@@ -36,17 +39,13 @@ async function unwrapPromise(
  * synchronous or asynchronous, we have to determine its return type
  * and unwrap `Promise` or `Observable`
  */
-export function distributeActions(
-  wrapped: Wrapped,
-  actionCompleter: ActionCompleter | null,
-  dispatchFactory: DispatchFactory
-) {
+export function distributeActions(wrapped: Wrapped, actionCompleter: ActionCompleter | null) {
   if (isObservable(wrapped)) {
-    return unwrapObservable(wrapped, actionCompleter, dispatchFactory);
+    return unwrapObservable(wrapped, actionCompleter);
   }
 
   if (isPromise(wrapped)) {
-    return unwrapPromise(wrapped, dispatchFactory);
+    return unwrapPromise(wrapped);
   }
 
   dispatchFactory(wrapped);
