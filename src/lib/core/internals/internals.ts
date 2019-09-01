@@ -1,15 +1,6 @@
 import { Observable } from 'rxjs';
 
-import { DispatchAction } from '../actions/actions';
-
-export type CustomAction<T = unknown> = new (payload?: T) => any;
-
-export interface ObjectLiteralAction<T = unknown> {
-  type: string;
-  payload?: T;
-}
-
-export type Action<T = unknown> = CustomAction<T> | DispatchAction;
+export type Action<T = unknown> = new (payload?: T) => any;
 
 export type StreamLike<T> = Observable<T> | Promise<T>;
 

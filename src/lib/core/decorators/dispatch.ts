@@ -1,15 +1,10 @@
+import { DispatchOptions } from '../internals/internals';
+import { getNgZone } from '../internals/static-injector';
 import { ActionCompleter } from '../internals/action-completer';
-import { getNgZone, getStore } from '../internals/static-injector';
 import { distributeActions } from '../internals/distribute-actions';
-import { flatten, renovateNgxsActions, isMethodDecorator } from '../utils/utils';
-import { Wrapped, ActionOrActions, DispatchOptions } from '../internals/internals';
 
-function dispatchFactory(actionOrActions: ActionOrActions): void {
-  const store = getStore();
-  const ngZone = getNgZone();
-  const actions = flatten(actionOrActions);
-  const renovated = renovateNgxsActions(actions);
-  ngZone.run(() => store.dispatch(renovated));
+function isMethodDecorator(descriptor?: any): descriptor is TypedPropertyDescriptor<Function> {
+  return !!descriptor && typeof descriptor.value === 'function';
 }
 
 export function Dispatch(
@@ -32,10 +27,8 @@ export function Dispatch(
       }
 
       const ngZone = getNgZone();
-      const wrapped: Wrapped = originalValue.apply(this, arguments);
-      return ngZone.runOutsideAngular(() =>
-        distributeActions(wrapped, actionCompleter, dispatchFactory)
-      );
+      const wrapped = originalValue.apply(this, arguments);
+      return ngZone.runOutsideAngular(() => distributeActions(wrapped, actionCompleter));
     }
 
     if (isMethodDecorator(descriptor)) {
