@@ -37,6 +37,7 @@ describe('Server side rendering', () => {
       .click()
       .click()
       .click()
+      .wait(600)
       .get('h1.counter')
       .should('contain', 'Counter is 1');
   });
