@@ -2,8 +2,6 @@ import { Observable } from 'rxjs';
 
 export type Action<T = unknown> = new (payload?: T) => any;
 
-export type StreamLike<T> = Observable<T> | Promise<T>;
-
 export type DispatchFactory = (actionOrActions: ActionOrActions) => void;
 
 export type ActionOrActions = Action | Action[];
@@ -16,7 +14,7 @@ export type ActionOrActions = Action | Action[];
  * @Dispatch() increment = () => Promise.resolve(new Increment());
  * ```
  */
-export type Wrapped = StreamLike<ActionOrActions> | ActionOrActions;
+export type Wrapped = ActionOrActions | Observable<ActionOrActions> | Promise<ActionOrActions>;
 
 export interface DispatchOptions {
   cancelUncompleted?: boolean;
