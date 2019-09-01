@@ -143,6 +143,34 @@ export class AppComponent {
 }
 ```
 
+### Canceling
+
+If you have an async dispatcher, you may want to cancel a previous `Observable` if the dispatcher has been invoked again. This is useful for canceling previous requests like in a typeahead. Given the following example:
+
+```ts
+export class NovelsFacade {
+  @Dispatch() searchNovels = (query: string) =>
+    this.novelsService
+      .getNovels(query)
+      .pipe(map(novels => new SetNovels(novels)));
+
+  constructor(private novelsService: NovelsService) {}
+}
+```
+
+If we want to cancel previusly uncompleted `getNovels` request then we need to provide the `cancelUncompleted` option:
+
+```ts
+export class NovelsFacade {
+  @Dispatch({ cancelUncompleted: true }) searchNovels = (query: string) =>
+    this.novelsService
+      .getNovels(query)
+      .pipe(map(novels => new SetNovels(novels)));
+
+  constructor(private novelsService: NovelsService) {}
+}
+```
+
 ### Business Logic Decomposition with Facades
 
 [There is a great article](https://medium.com/ngxs/ngxs-facade-3aa90c41497b) about using facades and the `@Dispatch` decorator together to mask interaction with more complex components behind the scenes.

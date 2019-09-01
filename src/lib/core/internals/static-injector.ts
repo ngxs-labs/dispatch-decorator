@@ -1,5 +1,5 @@
 import { Injector, NgZone } from '@angular/core';
-import { Store } from '@ngxs/store';
+import { Store, Actions } from '@ngxs/store';
 
 class NgxsDispatchPluginModuleNotImported extends Error {
   constructor() {
@@ -27,4 +27,9 @@ export function getStore(): never | Store {
 export function getNgZone(): never | NgZone {
   assertDefined(injector);
   return injector!.get<NgZone>(NgZone);
+}
+
+export function getActions$(): never | Actions {
+  assertDefined(injector);
+  return injector!.get<Actions>(Actions);
 }

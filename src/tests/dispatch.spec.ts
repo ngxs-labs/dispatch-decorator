@@ -1,3 +1,4 @@
+/// <reference types="jest" />
 import { TestBed } from '@angular/core/testing';
 import { NgZone } from '@angular/core';
 import { NgxsModule, State, Action, Store, StateContext } from '@ngxs/store';
@@ -246,5 +247,29 @@ describe(NgxsDispatchPluginModule.name, () => {
     const counter = store.selectSnapshot(CounterState);
     // Assert
     expect(counter).toBe(0);
+  });
+
+  it('should cancel previously uncompleted asynchronous operations', async () => {
+    // Arrange
+    class CounterFacade {
+      @Dispatch({ cancelUncompleted: true }) increment = () =>
+        timer(500).pipe(mapTo(new Increment()));
+    }
+
+    // Act
+    TestBed.configureTestingModule({
+      imports: [NgxsModule.forRoot([CounterState]), NgxsDispatchPluginModule.forRoot()]
+    });
+
+    const facade = new CounterFacade();
+    const store: Store = TestBed.get(Store);
+
+    facade.increment();
+    facade.increment();
+    await facade.increment().toPromise();
+
+    const counter = store.selectSnapshot(CounterState);
+    // Assert
+    expect(counter).toBe(1);
   });
 });

@@ -26,3 +26,7 @@ export type ActionOrActions = Action | Action[];
  * ```
  */
 export type Wrapped = StreamLike<ActionOrActions> | ActionOrActions;
+
+export interface DispatchOptions {
+  cancelUncompleted?: boolean;
+}

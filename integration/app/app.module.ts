@@ -7,6 +7,7 @@ import { NgxsDispatchPluginModule } from '@ngxs-labs/dispatch-decorator';
 import { CounterState } from './counter.state';
 
 import { AppComponent } from './app.component';
+import { CounterComponent } from './counter/counter.component';
 
 import { environment } from '../environments/environment';
 
@@ -17,7 +18,7 @@ import { environment } from '../environments/environment';
     NgxsModule.forRoot([CounterState], { developmentMode: !environment.production }),
     NgxsDispatchPluginModule.forRoot()
   ],
-  declarations: [AppComponent],
+  declarations: [AppComponent, CounterComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
