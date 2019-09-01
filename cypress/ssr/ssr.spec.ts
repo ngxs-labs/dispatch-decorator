@@ -28,4 +28,16 @@ describe('Server side rendering', () => {
       .get('h1.counter')
       .should('contain', 'Counter is 2');
   });
+
+  it('should increment but cancel previously uncompleted async job', () => {
+    // Arrange & act & assert
+    cy.visit(indexUrl)
+      .get('button.increment-async')
+      // Try to increment 3 times
+      .click()
+      .click()
+      .click()
+      .get('h1.counter')
+      .should('contain', 'Counter is 1');
+  });
 });

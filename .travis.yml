@@ -12,6 +12,8 @@ addons:
     packages:
       - libgconf-2-4
 
+cache: false
+
 install:
   - yarn --pure-lockfile --non-interactive
 
