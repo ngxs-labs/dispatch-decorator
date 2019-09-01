@@ -1,3 +1,6 @@
+# 2.1.0 2019-09-01
+* Fix: remove `DispatchAction` and unnecessary closures [#252](https://github.com/ngxs-labs/dispatch-decorator/pull/252)
+
 # 2.0.0 2019-09-01
 * Build: prepare package for the Angular 8+ compatibility [#247](https://github.com/ngxs-labs/dispatch-decorator/pull/247)
 * Build: configure `cypress` for SSR and E2E testing [#248](https://github.com/ngxs-labs/dispatch-decorator/pull/248)
