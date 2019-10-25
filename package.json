@@ -82,7 +82,7 @@
     "@types/express": "^4.17.1",
     "@types/jest": "^24.0.19",
     "@types/node": "^12.7.3",
-    "@types/semver": "^6.0.2",
+    "@types/semver": "^6.2.0",
     "angular-http-server": "^1.9.0",
     "codelyzer": "^5.2.0",
     "colors": "^1.4.0",
