@@ -102,7 +102,7 @@
     "semver": "^6.3.0",
     "start-server-and-test": "^1.10.6",
     "ts-loader": "^6.2.1",
-    "ts-node": "^8.5.0",
+    "ts-node": "^8.5.2",
     "tsickle": "^0.37.1",
     "tslib": "^1.10.0",
     "tslint": "^5.20.1",
