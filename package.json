@@ -77,7 +77,7 @@
     "@commitlint/cli": "^8.2.0",
     "@commitlint/config-angular": "^8.2.0",
     "@cypress/webpack-preprocessor": "^4.1.1",
-    "@nguniversal/module-map-ngfactory-loader": "^8.1.1",
+    "@nguniversal/module-map-ngfactory-loader": "^8.2.5",
     "@ngxs/store": "^3.5.0",
     "@types/express": "^4.17.2",
     "@types/jest": "^24.0.23",
