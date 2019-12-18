@@ -84,7 +84,7 @@
     "@types/node": "^12.7.3",
     "@types/semver": "^6.2.0",
     "angular-http-server": "^1.9.0",
-    "codelyzer": "^5.2.0",
+    "codelyzer": "^5.2.1",
     "colors": "^1.4.0",
     "core-js": "^3.5.0",
     "cypress": "^3.8.0",
