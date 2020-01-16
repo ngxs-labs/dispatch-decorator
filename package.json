@@ -107,7 +107,7 @@
     "tslib": "^1.10.0",
     "tslint": "^5.20.1",
     "tslint-sonarts": "^1.9.0",
-    "typescript": "3.5.3",
+    "typescript": "3.7.5",
     "zone.js": "^0.10.2"
   },
   "husky": {
