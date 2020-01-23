@@ -158,7 +158,7 @@ export class NovelsFacade {
 }
 ```
 
-If we want to cancel previusly uncompleted `getNovels` request then we need to provide the `cancelUncompleted` option:
+If we want to cancel previously uncompleted `getNovels` request then we need to provide the `cancelUncompleted` option:
 
 ```ts
 export class NovelsFacade {
