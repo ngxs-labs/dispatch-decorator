@@ -98,7 +98,7 @@
     "rollup": "^1.32.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-sourcemaps": "^0.6.2",
-    "rxjs": "^6.6.0",
+    "rxjs": "^6.6.2",
     "semver": "^6.3.0",
     "start-server-and-test": "^1.11.2",
     "ts-loader": "^6.2.2",
