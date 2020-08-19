@@ -87,7 +87,7 @@
     "codelyzer": "^5.2.2",
     "colors": "^1.4.0",
     "core-js": "^3.6.5",
-    "cypress": "^3.8.3",
+    "cypress": "^4.0.0",
     "express": "^4.17.1",
     "husky": "^3.1.0",
     "jest": "^24.9.0",
