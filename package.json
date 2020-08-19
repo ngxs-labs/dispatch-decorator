@@ -72,7 +72,7 @@
     "@angular/compiler-cli": "^8.2.14",
     "@angular/core": "^8.2.14",
     "@angular/platform-browser": "^8.2.14",
-    "@angular/platform-browser-dynamic": "^8.2.14",
+    "@angular/platform-browser-dynamic": "^10.0.0",
     "@angular/platform-server": "^8.2.14",
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-angular": "^8.3.4",
