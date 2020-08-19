@@ -64,7 +64,7 @@
   "devDependencies": {
     "@angular-builders/jest": "^8.3.2",
     "@angular-devkit/build-angular": "^0.803.25",
-    "@angular-devkit/build-ng-packagr": "^0.803.25",
+    "@angular-devkit/build-ng-packagr": "^0.1000.0",
     "@angular/animations": "^8.2.14",
     "@angular/cli": "^8.3.25",
     "@angular/common": "^8.2.14",
