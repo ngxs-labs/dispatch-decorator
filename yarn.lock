@@ -2552,10 +2552,10 @@ amdefine@>=0.0.4:
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
   integrity sha1-SlKCrBZHKek2Gbz9OtFR+BfOkfU=
 
-angular-http-server@^1.9.0:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/angular-http-server/-/angular-http-server-1.9.0.tgz#4d3d1dcc28512805c1025541532d15dfa8046254"
-  integrity sha512-CVMqVrjd93JEYoLyD7Tx2IIKDMKWrJVJdK7EM+AVakjIYK2yajLgJiRfzofZ6PYYq8Mr5juKGzFCPrdg4rc7tQ==
+angular-http-server@^1.9.1:
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/angular-http-server/-/angular-http-server-1.9.1.tgz#b214e08a8e8371f0c8bc5df081dd12883f8f49ac"
+  integrity sha512-H8Y/KJ4U5D01RQUYNuvBp7B0Z1mPRTsX2C6FPtQZL/SkWjEKYOiiX8lgNlPFQELbuTdfiMpxNA+VuJ0cx1dyyQ==
   dependencies:
     mime "^1.3.6"
     minimist "^1.2.0"
