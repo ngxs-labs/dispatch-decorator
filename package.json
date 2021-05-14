@@ -100,7 +100,7 @@
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rxjs": "^6.6.7",
     "semver": "^6.3.0",
-    "start-server-and-test": "^1.12.1",
+    "start-server-and-test": "^1.12.2",
     "ts-loader": "^6.2.2",
     "ts-node": "^8.10.2",
     "tsickle": "^0.39.1",
