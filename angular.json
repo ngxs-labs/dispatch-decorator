@@ -2,6 +2,7 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "newProjectRoot": "projects",
+  "defaultProject": "dispatch",
   "projects": {
     "dispatch": {
       "root": "",
@@ -10,15 +11,10 @@
       "prefix": "dispatch",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
             "tsConfig": "src/tsconfig.lib.json",
             "project": "src/ng-package.json"
-          },
-          "configurations": {
-            "production": {
-              "project": "src/ng-package.prod.json"
-            }
           }
         },
         "test": {
@@ -50,7 +46,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist-integration",
+            "outputPath": "dist/browser",
             "index": "integration/index.html",
             "main": "integration/main.ts",
             "polyfills": "integration/polyfills.ts",
@@ -58,7 +54,13 @@
             "preserveSymlinks": true,
             "assets": [
               "integration/assets"
-            ]
+            ],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
@@ -71,21 +73,14 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
-              "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
-                }
-              ]
+              "budgets": []
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -101,12 +96,17 @@
         "server": {
           "builder": "@angular-devkit/build-angular:server",
           "options": {
-            "outputPath": "dist-integration-server",
-            "main": "integration/main.server.ts",
-            "tsConfig": "integration/tsconfig.server.json"
+            "outputPath": "dist/server",
+            "main": "integration/server.ts",
+            "tsConfig": "integration/tsconfig.server.json",
+            "sourceMap": true,
+            "optimization": false
           },
           "configurations": {
             "production": {
+              "sourceMap": false,
+              "optimization": true,
+              "outputHashing": "media",
               "fileReplacements": [
                 {
                   "replace": "integration/environments/environment.ts",
@@ -114,7 +114,8 @@
                 }
               ]
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "test": {
           "builder": "@angular-builders/jest:run",

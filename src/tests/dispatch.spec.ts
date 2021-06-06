@@ -1,6 +1,7 @@
 /// <reference types="jest" />
+
 import { TestBed } from '@angular/core/testing';
-import { NgZone } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { NgxsModule, State, Action, Store, StateContext } from '@ngxs/store';
 
 import { of, timer } from 'rxjs';
@@ -21,6 +22,7 @@ describe(NgxsDispatchPluginModule.name, () => {
     name: 'counter',
     defaults: 0
   })
+  @Injectable()
   class CounterState {
     @Action(Increment)
     increment(ctx: StateContext<number>) {
@@ -45,7 +47,7 @@ describe(NgxsDispatchPluginModule.name, () => {
     });
 
     const facade = new CounterFacade();
-    const store: Store = TestBed.get(Store);
+    const store: Store = TestBed.inject(Store);
 
     facade.increment();
 
@@ -68,7 +70,7 @@ describe(NgxsDispatchPluginModule.name, () => {
     });
 
     const facade = new CounterFacade();
-    const store: Store = TestBed.get(Store);
+    const store: Store = TestBed.inject(Store);
 
     facade.increment();
 
@@ -89,7 +91,7 @@ describe(NgxsDispatchPluginModule.name, () => {
     });
 
     const facade = new CounterFacade();
-    const store: Store = TestBed.get(Store);
+    const store: Store = TestBed.inject(Store);
 
     await facade.incrementAsync();
 
@@ -110,7 +112,7 @@ describe(NgxsDispatchPluginModule.name, () => {
     });
 
     const facade = new CounterFacade();
-    const store: Store = TestBed.get(Store);
+    const store: Store = TestBed.inject(Store);
 
     await facade.incrementAsync().toPromise();
 
@@ -140,7 +142,7 @@ describe(NgxsDispatchPluginModule.name, () => {
     });
 
     const facade = new CounterFacade();
-    const store: Store = TestBed.get(Store);
+    const store: Store = TestBed.inject(Store);
 
     await facade.incrementAsync();
 
@@ -161,7 +163,7 @@ describe(NgxsDispatchPluginModule.name, () => {
     });
 
     const facade = new CounterFacade();
-    const store: Store = TestBed.get(Store);
+    const store: Store = TestBed.inject(Store);
 
     facade.increment();
 
@@ -182,7 +184,7 @@ describe(NgxsDispatchPluginModule.name, () => {
     });
 
     const facade = new CounterFacade();
-    const store: Store = TestBed.get(Store);
+    const store: Store = TestBed.inject(Store);
 
     facade.increment();
 
@@ -215,7 +217,7 @@ describe(NgxsDispatchPluginModule.name, () => {
     });
 
     const facade = new CounterFacade();
-    const store: Store = TestBed.get(Store);
+    const store: Store = TestBed.inject(Store);
 
     facade.increment();
     facade.incrementLambda();
@@ -238,7 +240,7 @@ describe(NgxsDispatchPluginModule.name, () => {
     });
 
     const facade = new CounterFacade();
-    const store: Store = TestBed.get(Store);
+    const store: Store = TestBed.inject(Store);
 
     // `toPromise` causes to `subscribe` under the hood
     await facade.incrementAsync().toPromise();
@@ -262,7 +264,7 @@ describe(NgxsDispatchPluginModule.name, () => {
     });
 
     const facade = new CounterFacade();
-    const store: Store = TestBed.get(Store);
+    const store: Store = TestBed.inject(Store);
 
     facade.increment();
     facade.increment();
