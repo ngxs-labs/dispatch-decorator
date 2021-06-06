@@ -143,7 +143,8 @@ export class AppComponent {
 If you have an async dispatcher, you may want to cancel a previous `Observable` if the dispatcher has been invoked again. This is useful for cancelling previous requests like in a typeahead. Given the following example:
 
 ```ts
-export class NovelsFacade {
+@Component({ ... })
+export class NovelsComponent {
   @Dispatch() searchNovels = (query: string) =>
     this.novelsService.getNovels(query).pipe(map(novels => new SetNovels(novels)));
 
@@ -154,7 +155,8 @@ export class NovelsFacade {
 If we want to cancel previously uncompleted `getNovels` request then we need to provide the `cancelUncompleted` option:
 
 ```ts
-export class NovelsFacade {
+@Component({ ... })
+export class NovelsComponent {
   @Dispatch({ cancelUncompleted: true }) searchNovels = (query: string) =>
     this.novelsService.getNovels(query).pipe(map(novels => new SetNovels(novels)));
 
