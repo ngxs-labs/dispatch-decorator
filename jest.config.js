@@ -1,9 +1,9 @@
 module.exports = {
-  roots: ['src'],
   cacheDirectory: '<rootDir>/.cache',
+  testMatch: ['<rootDir>/src/tests/*.spec.ts'],
   globals: {
     'ts-jest': {
-      tsConfig: '<rootDir>/tsconfig.spec.json'
+      tsconfig: '<rootDir>/tsconfig.spec.json'
     }
   }
 };
