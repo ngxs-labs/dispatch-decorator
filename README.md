@@ -6,16 +6,14 @@
 
 > Distribution for separation of concern between the state management and the view
 
-[![Build Status](https://travis-ci.org/ngxs-labs/dispatch-decorator.svg?branch=master)](https://travis-ci.org/ngxs-labs/dispatch-decorator)
 [![NPM](https://badge.fury.io/js/%40ngxs-labs%2Fdispatch-decorator.svg)](https://www.npmjs.com/package/@ngxs-labs/dispatch-decorator)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/ngxs-labs/dispatch-decorator/blob/master/LICENSE)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/610c73ab99434bf9807c080e7feb8b85)](https://www.codacy.com/app/arturovt/dispatch-decorator?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ngxs-labs/dispatch-decorator&amp;utm_campaign=Badge_Grade)
 
-This package simplifies dispatching process, you shouldn't care about `Store` service injection as we provide more declarative way to dispatch events out of the box.
+This package simplifies the dispatching process. You shouldn't care about `Store` service injection as we provide a more declarative way to dispatch events out of the box.
 
 ## 📦 Install
 
-To install `@ngxs-labs/dispatch-decorator` run the following command:
+To install the `@ngxs-labs/dispatch-decorator` run the following command:
 
 ```console
 yarn add @ngxs-labs/dispatch-decorator
@@ -31,17 +29,14 @@ import { NgxsModule } from '@ngxs/store';
 import { NgxsDispatchPluginModule } from '@ngxs-labs/dispatch-decorator';
 
 @NgModule({
-  imports: [
-    NgxsModule.forRoot(states),
-    NgxsDispatchPluginModule.forRoot()
-  ]
+  imports: [NgxsModule.forRoot(states), NgxsDispatchPluginModule.forRoot()]
 })
 export class AppModule {}
 ```
 
 ### Dispatch Decorator
 
-`@Dispatch()` is a function that allows you to decorate methods and properties of your classes. Firstly let's create our state for demonstrating purposes:
+`@Dispatch()` is a function that allows you to decorate the methods and properties of your classes. Firstly let's create our state for demonstrating purposes:
 
 ```typescript
 import { State, Action, StateContext } from '@ngxs/store';
@@ -71,7 +66,7 @@ export class CounterState {
 }
 ```
 
-After registering our state in the `NgxsModule` we are ready to try the plugin out. Given the following component:
+After registering our state in the `NgxsModule`, we are ready to try the plugin out. Given the following component:
 
 ```typescript
 import { Component } from '@angular/core';
@@ -102,9 +97,9 @@ export class AppComponent {
 }
 ```
 
-As you may mention we don't have to inject the `Store` class to dispatch those actions. The `@Dispatch` decorator does it for you underneath. It gets the result of the function call and invokes `store.dispatch(...)` under the hood.
+As you may mention, we don't have to inject the `Store` class to dispatch those actions. The `@Dispatch` decorator does it for you underneath. It gets the result of the function call and invokes `store.dispatch(...)` under the hood.
 
-Dispatchers can be also asynchronous. They can return either `Promise` or `Observable`. Asynchronous operations are handled outside of Angular's zone, thus it doesn't affect performance:
+Dispatchers can also be asynchronous. They can return either `Promise` or `Observable`. Asynchronous operations are handled outside of Angular's zone; thus it doesn't affect performance:
 
 ```typescript
 export class AppComponent {
@@ -128,7 +123,7 @@ export class AppComponent {
 }
 ```
 
-Notice that it doesn't matter if you use an arrow function or a normal class method.
+Notice that it doesn't matter if you use an arrow function or a regular class method.
 
 ### Dispatching Multiple Actions
 
@@ -145,14 +140,12 @@ export class AppComponent {
 
 ### Canceling
 
-If you have an async dispatcher, you may want to cancel a previous `Observable` if the dispatcher has been invoked again. This is useful for canceling previous requests like in a typeahead. Given the following example:
+If you have an async dispatcher, you may want to cancel a previous `Observable` if the dispatcher has been invoked again. This is useful for cancelling previous requests like in a typeahead. Given the following example:
 
 ```ts
 export class NovelsFacade {
   @Dispatch() searchNovels = (query: string) =>
-    this.novelsService
-      .getNovels(query)
-      .pipe(map(novels => new SetNovels(novels)));
+    this.novelsService.getNovels(query).pipe(map(novels => new SetNovels(novels)));
 
   constructor(private novelsService: NovelsService) {}
 }
@@ -163,9 +156,7 @@ If we want to cancel previously uncompleted `getNovels` request then we need to 
 ```ts
 export class NovelsFacade {
   @Dispatch({ cancelUncompleted: true }) searchNovels = (query: string) =>
-    this.novelsService
-      .getNovels(query)
-      .pipe(map(novels => new SetNovels(novels)));
+    this.novelsService.getNovels(query).pipe(map(novels => new SetNovels(novels)));
 
   constructor(private novelsService: NovelsService) {}
 }
