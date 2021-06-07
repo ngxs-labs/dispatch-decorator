@@ -1,11 +1,14 @@
-import { NgModule, ModuleWithProviders, Injector } from '@angular/core';
+import { NgModule, ModuleWithProviders, NgModuleRef } from '@angular/core';
 
-import { setInjector } from './core/internals/static-injector';
+import { setInjector } from './internals/static-injector';
 
 @NgModule()
 export class NgxsDispatchPluginModule {
-  constructor(injector: Injector) {
-    setInjector(injector);
+  constructor(ngModuleRef: NgModuleRef<unknown>) {
+    setInjector(ngModuleRef.injector);
+    ngModuleRef.onDestroy(() => {
+      setInjector(null);
+    });
   }
 
   static forRoot(): ModuleWithProviders<NgxsDispatchPluginModule> {
