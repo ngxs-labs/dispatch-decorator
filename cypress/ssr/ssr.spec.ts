@@ -3,11 +3,21 @@
 describe('Server side rendering', () => {
   const indexUrl = '/';
 
+  it('should make concurrent requests and app should render correctly for each request', async () => {
+    const promises: Promise<string>[] = Array.from({ length: 100 }).map(() =>
+      fetch('/').then(res => res.text())
+    );
+
+    const bodies = await Promise.all(promises);
+
+    bodies.forEach(body => {
+      expect(body).to.contain('Toggle counter component');
+    });
+  });
+
   it('successfully render index page', () => {
     // Arrange & act & assert
-    cy.request(indexUrl)
-      .its('body')
-      .should('contain', 'Counter is 0');
+    cy.request(indexUrl).its('body').should('contain', 'Counter is 0');
   });
 
   it('should increment and decrement after button clicks', () => {

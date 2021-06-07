@@ -20,28 +20,19 @@
     "start-test": "start-server-and-test",
     "ng": "ng",
     "ts-node": "ts-node",
-    "serve:integration": "ng serve --prod --project integration",
+    "serve:integration": "ng serve --project integration",
     "serve:integration:static": "serve -l 4200 -s dist/browser",
-    "serve:integration:ssr": "node dist/server/main",
+    "serve:integration:ssr": "node dist/integration/server/main",
     "lint": "ng lint",
     "test": "ng test",
     "build": "ng build",
     "postbuild": "cpy README.md dist/dispatch",
     "build:integration": "ng run integration:build:production",
     "build:integration:ssr": "ng run integration:server:production",
-    "cy:open": "cypress open --config integrationFolder=cypress/integration",
     "cy:open:ssr": "cypress open --config integrationFolder=cypress/ssr",
-    "cy:run": "cypress run --config integrationFolder=cypress/integration",
     "cy:run:ssr": "cypress run --config integrationFolder=cypress/ssr",
-    "cy:run:chrome": "yarn cy:run --browser chrome",
-    "cy:run:chromium": "yarn cy:run --browser chromium",
-    "e2e": "start-test serve:integration 4200 cy:open",
-    "e2e:chrome": "start-test serve:integration 4200 cy:run:chrome",
-    "e2e:ssr": "start-test serve:integration:ssr 4200 cy:open:ssr",
-    "e2e:chromium": "start-test serve:integration 4200 cy:run:chromium",
     "test:ci": "ng test --run-in-band --silent",
     "test:ci:e2e": "yarn start-test serve:integration:static 4200 cy:run",
-    "test:ci:integration": "yarn build:integration",
     "test:ci:integration:ssr": "yarn build:integration:ssr && yarn start-test serve:integration:ssr 4200 cy:run:ssr"
   },
   "private": true,
@@ -77,8 +68,10 @@
     "rxjs": "^6.6.7",
     "serve": "^11.3.2",
     "start-server-and-test": "^1.12.5",
+    "ts-jest": "^26.5.6",
     "ts-loader": "^9.2.3",
     "ts-node": "^10.0.0",
+    "tslib": "^2.0.0",
     "tslint": "~6.1.0",
     "typescript": "4.2.4",
     "zone.js": "~0.11.4"
@@ -91,8 +84,7 @@
   },
   "lint-staged": {
     "*.ts": [
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ]
   },
   "prettier": {
@@ -104,9 +96,5 @@
     "trailingComma": "none",
     "bracketSpacing": true,
     "singleQuote": true
-  },
-  "dependencies": {
-    "ts-jest": "^26.5.6",
-    "tslib": "^2.0.0"
   }
 }

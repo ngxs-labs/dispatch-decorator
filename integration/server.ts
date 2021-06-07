@@ -8,12 +8,10 @@ import { ngExpressEngine } from '@nguniversal/express-engine';
 
 import { AppServerModule } from './main.server';
 
-// The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
   const server = express();
-  const distFolder = join(process.cwd(), 'dist/browser');
+  const distFolder = join(process.cwd(), 'dist/integration/browser');
 
-  // Our Universal express-engine (found @ https://github.com/angular/universal/tree/master/modules/express-engine)
   server.engine(
     'html',
     ngExpressEngine({
@@ -24,9 +22,6 @@ export function app(): express.Express {
   server.set('view engine', 'html');
   server.set('views', distFolder);
 
-  // Example Express Rest API endpoints
-  // server.get('/api/**', (req, res) => { });
-  // Serve static files from /browser
   server.get(
     '*.*',
     express.static(distFolder, {
@@ -34,7 +29,6 @@ export function app(): express.Express {
     })
   );
 
-  // All regular routes use the Universal engine
   server.get('*', (req, res) => {
     res.render('index', { req, providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }] });
   });
@@ -45,7 +39,6 @@ export function app(): express.Express {
 function run(): void {
   const port = process.env.PORT || 4200;
 
-  // Start up the Node server
   const server = app();
   server.listen(port, () => {
     console.log(`Node Express server listening on http://localhost:${port}`);

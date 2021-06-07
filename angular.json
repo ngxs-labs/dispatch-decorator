@@ -28,7 +28,7 @@
           "options": {
             "tsConfig": [
               "src/tsconfig.lib.json",
-              "tsconfig.spec.json"
+              "src/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -46,7 +46,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/browser",
+            "outputPath": "dist/integration/browser",
             "index": "integration/index.html",
             "main": "integration/main.ts",
             "polyfills": "integration/polyfills.ts",
@@ -63,6 +63,14 @@
             "namedChunks": true
           },
           "configurations": {
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            },
             "production": {
               "fileReplacements": [
                 {
@@ -80,7 +88,7 @@
               "budgets": []
             }
           },
-          "defaultConfiguration": ""
+          "defaultConfiguration": "development"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -96,7 +104,7 @@
         "server": {
           "builder": "@angular-devkit/build-angular:server",
           "options": {
-            "outputPath": "dist/server",
+            "outputPath": "dist/integration/server",
             "main": "integration/server.ts",
             "tsConfig": "integration/tsconfig.server.json",
             "sourceMap": true,
