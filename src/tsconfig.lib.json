@@ -9,7 +9,7 @@
     "declarationMap": false
   },
   "angularCompilerOptions": {
-    "enableIvy": false,
+    "compilationMode": "partial",
     "strictMetadataEmit": true,
     "skipTemplateCodegen": true,
     "enableResourceInlining": true
