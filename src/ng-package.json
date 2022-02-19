@@ -3,9 +3,6 @@
   "dest": "../dist/dispatch",
   "lib": {
     "flatModuleFile": "ngxs-labs-dispatch",
-    "entryFile": "index.ts",
-    "umdModuleIds": {
-      "@ngxs/store": "ngxs-store"
-    }
+    "entryFile": "index.ts"
   }
 }
