@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/ng-packagr/package.schema.json",
   "name": "@ngxs-labs/dispatch-decorator",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ngxs-labs/dispatch-decorator.git"
@@ -18,7 +18,7 @@
   ],
   "sideEffects": true,
   "peerDependencies": {
-    "@angular/core": ">=12.0.0 <13.0.0",
+    "@angular/core": ">=13.0.0",
     "@ngxs/store": ">=3.7.2",
     "rxjs": ">=6.1.0"
   }
