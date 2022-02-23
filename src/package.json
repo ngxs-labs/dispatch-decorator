@@ -19,7 +19,7 @@
   "sideEffects": true,
   "peerDependencies": {
     "@angular/core": ">=13.0.0",
-    "@ngxs/store": ">=3.7.2",
+    "@ngxs/store": ">=3.7.3",
     "rxjs": ">=6.1.0"
   }
 }
