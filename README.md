@@ -4,16 +4,16 @@
 
 ---
 
-> Distribution for separation of concern between the state management and the view
+> The distribution for separation of concern between the state management and the view
 
 [![NPM](https://badge.fury.io/js/%40ngxs-labs%2Fdispatch-decorator.svg)](https://www.npmjs.com/package/@ngxs-labs/dispatch-decorator)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/ngxs-labs/dispatch-decorator/blob/master/LICENSE)
 
-This package simplifies the dispatching process. You shouldn't care about `Store` service injection as we provide a more declarative way to dispatch events out of the box.
+This package simplifies the dispatching process. It would be best if you didn't care about `Store` service injection as we provide a more declarative way to dispatch events out of the box.
 
 ## 📦 Install
 
-To install the `@ngxs-labs/dispatch-decorator` run the following command:
+To install the `@ngxs-labs/dispatch-decorator`, run the following command:
 
 ```console
 yarn add @ngxs-labs/dispatch-decorator
@@ -66,7 +66,7 @@ export class CounterState {
 }
 ```
 
-After registering our state in the `NgxsModule`, we are ready to try the plugin out. Given the following component:
+We are ready to try the plugin after registering our state in the `NgxsModule`, given the following component:
 
 ```typescript
 import { Component } from '@angular/core';
@@ -127,7 +127,7 @@ Notice that it doesn't matter if you use an arrow function or a regular class me
 
 ### Dispatching Multiple Actions
 
-Dispatchers can return arrays. Actions will be handled synchronously one by one if their action handlers do synchronous job and vice versa if their handlers are asynchronous:
+Dispatchers can return arrays. NGXS will handle actions synchronously if their action handlers do a synchronous job and vice versa if their handlers are asynchronous.
 
 ```typescript
 export class AppComponent {
@@ -152,7 +152,7 @@ export class NovelsComponent {
 }
 ```
 
-If we want to cancel previously uncompleted `getNovels` request then we need to provide the `cancelUncompleted` option:
+If we want to cancel previously uncompleted `getNovels` request, then we need to provide the `cancelUncompleted` option:
 
 ```ts
 @Component({ ... })
