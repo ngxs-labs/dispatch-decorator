@@ -62,7 +62,7 @@
     "lint-staged": "^11.0.0",
     "ng-packagr": "^13.2.1",
     "prettier": "^2.5.1",
-    "rxjs": "^7.5.4",
+    "rxjs": "^7.5.5",
     "serve": "^11.3.2",
     "start-server-and-test": "^1.14.0",
     "ts-jest": "^27.1.3",
