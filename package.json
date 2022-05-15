@@ -52,7 +52,7 @@
     "@nguniversal/express-engine": "^13.0.2",
     "@ngxs/store": "^3.7.3",
     "@types/express": "^4.17.2",
-    "@types/jest": "^27.4.0",
+    "@types/jest": "^27.5.1",
     "@types/node": "^15.12.1",
     "cpy-cli": "^3.1.1",
     "cypress": "^9.5.0",
