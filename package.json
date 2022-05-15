@@ -47,7 +47,7 @@
     "@angular/platform-browser-dynamic": "^13.2.3",
     "@angular/platform-server": "^13.2.3",
     "@commitlint/cli": "^16.2.1",
-    "@commitlint/config-angular": "^16.2.1",
+    "@commitlint/config-angular": "^16.3.0",
     "@cypress/webpack-preprocessor": "^5.9.0",
     "@nguniversal/express-engine": "^13.0.2",
     "@ngxs/store": "^3.7.3",
