@@ -13,6 +13,7 @@ function removeRootElement() {
   const root: Element = document.getElementsByTagName('app-root').item(0)!;
   try {
     document.body.removeChild(root);
+    // eslint-disable-next-line no-empty
   } catch {}
 }
 
@@ -30,6 +31,7 @@ function resetPlatformAfterBootstrapping() {
   createPlatform(TestBed);
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function freshPlatform(fn: Function): (...args: any[]) => any {
   return async function testWithAFreshPlatform(this: any, ...args: any[]) {
     try {

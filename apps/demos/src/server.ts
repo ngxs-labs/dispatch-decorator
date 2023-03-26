@@ -6,7 +6,7 @@ import * as express from 'express';
 import { APP_BASE_HREF } from '@angular/common';
 import { ngExpressEngine } from '@nguniversal/express-engine';
 
-import { AppServerModule } from './src/main.server';
+import { AppServerModule } from './main.server';
 
 export function app(): express.Express {
   const server = express();
@@ -55,4 +55,4 @@ if (moduleFilename === __filename || moduleFilename.includes('iisnode')) {
   run();
 }
 
-export * from './src/main.server';
+export * from './main.server';

@@ -83,7 +83,7 @@
       "executor": "@angular-devkit/build-angular:server",
       "options": {
         "outputPath": "dist/apps/demos/server",
-        "main": "apps/demos/server.ts",
+        "main": "apps/demos/src/server.ts",
         "tsConfig": "apps/demos/tsconfig.server.json",
         "sourceMap": true,
         "optimization": false
