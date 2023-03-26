@@ -2,7 +2,7 @@ import { Injector, NgZone } from '@angular/core';
 import { Store } from '@ngxs/store';
 
 class NgxsDispatchPluginModuleNotImported extends Error {
-  message = 'NgxsDispatchPluginModule is not imported';
+  override message = 'NgxsDispatchPluginModule is not imported';
 }
 
 let _injector: Injector | null = null;

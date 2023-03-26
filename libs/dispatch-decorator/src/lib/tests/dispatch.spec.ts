@@ -7,7 +7,8 @@ import { NgxsModule, State, Action, Store, StateContext } from '@ngxs/store';
 import { of, timer } from 'rxjs';
 import { delay, concatMapTo, mapTo } from 'rxjs/operators';
 
-import { NgxsDispatchPluginModule, Dispatch } from '../src';
+import { Dispatch } from '../decorators/dispatch';
+import { NgxsDispatchPluginModule } from '../dispatch.module';
 
 describe(NgxsDispatchPluginModule.name, () => {
   class Increment {

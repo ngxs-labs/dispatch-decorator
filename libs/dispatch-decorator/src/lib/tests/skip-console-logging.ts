@@ -1,11 +1,16 @@
 /// <reference types="jest" />
 
+function createFn() {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  return () => {};
+}
+
 export function skipConsoleLogging<T extends (...args: any[]) => any>(fn: T): ReturnType<T> {
   const consoleSpies = [
-    jest.spyOn(console, 'log').mockImplementation(() => {}),
-    jest.spyOn(console, 'warn').mockImplementation(() => {}),
-    jest.spyOn(console, 'error').mockImplementation(() => {}),
-    jest.spyOn(console, 'info').mockImplementation(() => {})
+    jest.spyOn(console, 'log').mockImplementation(createFn()),
+    jest.spyOn(console, 'warn').mockImplementation(createFn()),
+    jest.spyOn(console, 'error').mockImplementation(createFn()),
+    jest.spyOn(console, 'info').mockImplementation(createFn())
   ];
   function restoreSpies() {
     consoleSpies.forEach(spy => spy.mockRestore());

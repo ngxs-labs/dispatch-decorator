@@ -3,6 +3,5 @@
   "dest": "../../dist/libs/dispatch-decorator",
   "lib": {
     "entryFile": "src/index.ts"
-  },
-  "allowedNonPeerDependencies": ["@scarf/scarf"]
+  }
 }

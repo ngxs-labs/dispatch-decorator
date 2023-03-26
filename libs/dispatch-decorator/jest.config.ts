@@ -1,24 +1,22 @@
 /* eslint-disable */
 export default {
-  bail: true,
+  displayName: 'dispatch-decorator',
   preset: '../../jest.preset.js',
-  coverageReporters: ['lcov', 'cobertura'],
-  coverageDirectory: '../../coverage/libs/dispatch-decorator',
-  collectCoverageFrom: ['./src/**/!(index).ts'],
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  globals: {
-    'ts-jest': {
-      stringifyContentPathRegex: '\\.(html|svg)$',
-      tsconfig: '<rootDir>/tsconfig.spec.json'
-    }
+  transform: {
+    '^.+\\.(ts|mjs|js|html)$': [
+      'jest-preset-angular',
+      {
+        isolatedModules: true,
+        tsconfig: '<rootDir>/tsconfig.spec.json',
+        stringifyContentPathRegex: '\\.(html|svg)$'
+      }
+    ]
   },
+  transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$)'],
   snapshotSerializers: [
     'jest-preset-angular/build/serializers/no-ng-attributes',
     'jest-preset-angular/build/serializers/ng-snapshot',
     'jest-preset-angular/build/serializers/html-comment'
-  ],
-  transform: {
-    '^.+.(ts|mjs|js|html)$': 'jest-preset-angular'
-  },
-  transformIgnorePatterns: ['node_modules/(?!.*.mjs$)']
+  ]
 };

@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { Action, NgxsModule, State, StateContext, Store } from '@ngxs/store';
 
-import { Dispatch } from '../src';
+import { Dispatch } from '../decorators/dispatch';
 
 import { freshPlatform } from './fresh-platform';
 import { skipConsoleLogging } from './skip-console-logging';
