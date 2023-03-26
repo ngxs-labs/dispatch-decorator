@@ -1,0 +1,33 @@
+{
+  "name": "dispatch-decorator",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "libs/dispatch-decorator/src",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/angular:package",
+      "options": {
+        "tsConfig": "libs/dispatch-decorator/tsconfig.lib.json",
+        "project": "libs/dispatch-decorator/ng-package.json"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/dispatch-decorator/src/**/*.ts",
+          "libs/dispatch-decorator/src/**/*.html"
+        ]
+      },
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "options": {
+        "jestConfig": "libs/dispatch-decorator/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "type": ["lib"]
+}

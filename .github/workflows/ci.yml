@@ -1,0 +1,41 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - run: git fetch --no-tags --prune --depth 2 origin master
+
+      - uses: actions/cache@v3
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ~/.cache # Default cache directory for both Yarn and Cypress
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.13.0
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: yarn --immutable
+
+      - run: yarn nx affected:lint --parallel --base=origin/master
+      - run: yarn nx affected:test --parallel --base=origin/master
+      - run: yarn nx affected:build --base=origin/master
+      - run: yarn nx affected:e2e --base=origin/master

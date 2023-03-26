@@ -1,0 +1,24 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@ngxs-labs/dispatch-decorator": ["libs/dispatch-decorator/src/index.ts"]
+    },
+    "target": "es5",
+    "lib": ["es2017", "dom"],
+    "moduleResolution": "node",
+    "typeRoots": ["node_modules/@types"],
+    "strict": true,
+    "sourceMap": true,
+    "declaration": false,
+    "noImplicitAny": false,
+    "resolveJsonModule": true,
+    "downlevelIteration": true,
+    "noStrictGenericChecks": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "suppressImplicitAnyIndexErrors": true
+  },
+  "exclude": ["cypress"]
+}

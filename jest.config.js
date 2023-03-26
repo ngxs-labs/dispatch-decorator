@@ -1,9 +1,13 @@
 module.exports = {
-  cacheDirectory: '<rootDir>/.cache',
-  testMatch: ['<rootDir>/src/tests/*.spec.ts'],
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  testPathIgnorePatterns: ['/node_modules/', '/lib/', 'cypress'],
   globals: {
     'ts-jest': {
-      tsconfig: '<rootDir>/src/tsconfig.spec.json'
+      tsconfig: {
+        esModuleInterop: true,
+        downlevelIteration: false
+      }
     }
   }
 };
