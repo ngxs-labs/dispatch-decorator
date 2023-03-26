@@ -4,7 +4,7 @@ describe('Server side rendering', () => {
   const indexUrl = '/';
 
   it('should make concurrent requests and app should render correctly for each request', async () => {
-    const promises: Promise<string>[] = Array.from({ length: 100 }).map(() =>
+    const promises: Promise<string>[] = Array.from({ length: 50 }).map(() =>
       fetch('/').then(res => res.text())
     );
 

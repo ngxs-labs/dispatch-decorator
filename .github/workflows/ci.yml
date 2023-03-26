@@ -39,3 +39,5 @@ jobs:
       - run: yarn nx affected:test --parallel --base=origin/master
       - run: yarn nx affected:build --base=origin/master
       - run: yarn nx affected:e2e --base=origin/master
+        env:
+          ELECTRON_EXTRA_LAUNCH_ARGS: '--disable-gpu'
