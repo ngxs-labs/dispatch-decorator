@@ -1,9 +1,9 @@
 import { NgZone } from '@angular/core';
 import { Store } from '@ngxs/store';
 
+import { unwrapAndDispatch } from '../internals/unwrap';
 import { DispatchOptions } from '../internals/internals';
 import { getNgZone, getStore } from '../internals/static-injector';
-import { distributeActions } from '../internals/distribute-actions';
 import { createActionCompleter } from '../internals/action-completer';
 import { ensureLocalInjectorCaptured, localInject } from '../internals/decorator-injector-adapter';
 
@@ -34,9 +34,7 @@ export function Dispatch(options = defaultOptions): PropertyDecorator {
       // eslint-disable-next-line prefer-rest-params
       const wrapped = originalValue.apply(this, arguments);
 
-      return ngZone.runOutsideAngular(() =>
-        distributeActions(store, ngZone, wrapped, actionCompleter)
-      );
+      return ngZone.runOutsideAngular(() => unwrapAndDispatch(store, wrapped, actionCompleter));
     }
 
     if (typeof descriptor?.value === 'function') {
