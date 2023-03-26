@@ -9,21 +9,54 @@
 [![NPM](https://badge.fury.io/js/%40ngxs-labs%2Fdispatch-decorator.svg)](https://www.npmjs.com/package/@ngxs-labs/dispatch-decorator)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/ngxs-labs/dispatch-decorator/blob/master/LICENSE)
 
-This package simplifies the dispatching process. It would be best if you didn't care about `Store` service injection as we provide a more declarative way to dispatch events out of the box.
+This package simplifies the dispatching process. It would be best if you didn't care about the `Store` service injection, as we provide a more declarative way to dispatch events out of the box.
+
+## Compatibility with Angular Versions
+
+<table>
+  <thead>
+    <tr>
+      <th>@ngxs-labs/dispatch-decorator</th>
+      <th>Angular</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        4.x
+      </td>
+      <td>
+        >= 13 < 15
+      </td>
+    </tr>
+    <tr>
+      <td>
+        5.x
+      </td>
+      <td>
+        >= 15
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 ## 📦 Install
 
 To install the `@ngxs-labs/dispatch-decorator`, run the following command:
 
-```console
-yarn add @ngxs-labs/dispatch-decorator
+```sh
+$ npm install @ngxs-labs/dispatch-decorator
+# Or if you're using yarn
+$ yarn add @ngxs-labs/dispatch-decorator
+# Or if you're using pnpm
+$ pnpm install @ngxs-labs/dispatch-decorator
 ```
 
 ## 🔨 Usage
 
 Import the module into your root application module:
 
-```typescript
+```ts
 import { NgModule } from '@angular/core';
 import { NgxsModule } from '@ngxs/store';
 import { NgxsDispatchPluginModule } from '@ngxs-labs/dispatch-decorator';
@@ -36,9 +69,9 @@ export class AppModule {}
 
 ### Dispatch Decorator
 
-`@Dispatch()` is a function that allows you to decorate the methods and properties of your classes. Firstly let's create our state for demonstrating purposes:
+`@Dispatch()` can be used to decorate methods and properties of your classes. Firstly let's create our state for demonstrating purposes:
 
-```typescript
+```ts
 import { State, Action, StateContext } from '@ngxs/store';
 
 export class Increment {
@@ -68,7 +101,7 @@ export class CounterState {
 
 We are ready to try the plugin after registering our state in the `NgxsModule`, given the following component:
 
-```typescript
+```ts
 import { Component } from '@angular/core';
 import { Select } from '@ngxs/store';
 import { Dispatch } from '@ngxs-labs/dispatch-decorator';
@@ -97,11 +130,11 @@ export class AppComponent {
 }
 ```
 
-As you may mention, we don't have to inject the `Store` class to dispatch those actions. The `@Dispatch` decorator does it for you underneath. It gets the result of the function call and invokes `store.dispatch(...)` under the hood.
+You may mention that we don't have to inject the `Store` class to dispatch actions. The `@Dispatch` decorator takes care of delivering actions internally. It unwraps the result of function calls and calls `store.dispatch(...)`.
 
-Dispatchers can also be asynchronous. They can return either `Promise` or `Observable`. Asynchronous operations are handled outside of Angular's zone; thus it doesn't affect performance:
+Dispatch function can be both synchronous and asynchronous, meaning that the `@Dispatch` decorator can unwrap `Promise` and `Observable`. Dispatch functions are called outside of the Angular zone, which means asynchronous tasks won't notify Angular about change detection forced to be run:
 
-```typescript
+```ts
 export class AppComponent {
   // `ApiService` is defined somewhere
   constructor(private api: ApiService) {}
@@ -123,13 +156,13 @@ export class AppComponent {
 }
 ```
 
-Notice that it doesn't matter if you use an arrow function or a regular class method.
+Note it doesn't if an arrow function or a regular class method is used.
 
 ### Dispatching Multiple Actions
 
-Dispatchers can return arrays. NGXS will handle actions synchronously if their action handlers do a synchronous job and vice versa if their handlers are asynchronous.
+`@Dispatch` function can return arrays of actions:
 
-```typescript
+```ts
 export class AppComponent {
   @Dispatch() setLanguageAndNavigateHome = (language: string) => [
     new SetLanguage(language),
@@ -140,7 +173,7 @@ export class AppComponent {
 
 ### Canceling
 
-If you have an async dispatcher, you may want to cancel a previous `Observable` if the dispatcher has been invoked again. This is useful for cancelling previous requests like in a typeahead. Given the following example:
+`@Dispatch` functions can cancel currently running actions if they're called again in the middle of running actions. This is useful for canceling previous requests like in a typeahead. Given the following example:
 
 ```ts
 @Component({ ... })
@@ -152,7 +185,7 @@ export class NovelsComponent {
 }
 ```
 
-If we want to cancel previously uncompleted `getNovels` request, then we need to provide the `cancelUncompleted` option:
+We have to provide the `cancelUncompleted` option if we'd want to cancel previously uncompleted `getNovels` action:
 
 ```ts
 @Component({ ... })
